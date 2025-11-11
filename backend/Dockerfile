@@ -1,7 +1,9 @@
 # Backend Dockerfile
 FROM node:20
 WORKDIR /app
+COPY package*.json ./
+RUN npm install --include=dev
 COPY . .
-RUN npm install
+RUN npx prisma generate
 EXPOSE 3001
-CMD ["npm", "run", "dev"]
+CMD ["node", "app.js"]

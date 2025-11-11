@@ -48,14 +48,11 @@ services:
       - "3001:3001"
     volumes:
       - ./backend:/app
-
+      - /app/node_modules
+    command: node app.js
     environment:
       DATABASE_URL: mysql://bestauser:bestapass@mysql:3306/besta
     depends_on:
-      # mongo:
-      #   condition: service_started
-      # redis:
-      #   condition: service_started
       mysql:
         condition: service_healthy
 
