@@ -1,0 +1,144 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* TNA Admin Dashboard Design System - Professional Enterprise Theme */
+
+@layer base {
+  :root {
+    /* Core Background & Text */
+    --background: 210 20% 98%;
+    --foreground: 220 15% 20%;
+
+    /* Card System */
+    --card: 0 0% 100%;
+    --card-foreground: 220 15% 20%;
+
+    /* Popover */
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 15% 20%;
+
+    /* Primary Brand - Professional Navy */
+    --primary: 220 50% 20%;
+    --primary-foreground: 210 40% 98%;
+    --primary-hover: 220 50% 25%;
+
+    /* Secondary - Clean Blue-Gray */
+    --secondary: 220 20% 95%;
+    --secondary-foreground: 220 25% 25%;
+
+    /* Muted - Subtle Backgrounds */
+    --muted: 220 15% 96%;
+    --muted-foreground: 220 10% 50%;
+
+    /* Accent - Professional Blue */
+    --accent: 215 70% 55%;
+    --accent-foreground: 0 0% 100%;
+
+    /* Status Colors */
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Borders & Inputs */
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 215 70% 55%;
+
+    /* Border Radius */
+    --radius: 0.75rem;
+
+    /* Dashboard Specific */
+    --dashboard-bg: 220 15% 97%;
+    --sidebar-bg: 220 25% 15%;
+    --sidebar-foreground: 220 15% 85%;
+    --sidebar-active: 215 70% 55%;
+    --sidebar-hover: 220 20% 20%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(220 50% 20%), hsl(220 50% 35%));
+    --gradient-accent: linear-gradient(135deg, hsl(215 70% 55%), hsl(215 70% 70%));
+    --gradient-success: linear-gradient(135deg, hsl(142 76% 36%), hsl(142 76% 50%));
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(220 15% 98%));
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 hsl(220 15% 20% / 0.05);
+    --shadow-md: 0 4px 6px -1px hsl(220 15% 20% / 0.1), 0 2px 4px -1px hsl(220 15% 20% / 0.06);
+    --shadow-lg: 0 10px 15px -3px hsl(220 15% 20% / 0.1), 0 4px 6px -2px hsl(220 15% 20% / 0.05);
+    --shadow-xl: 0 20px 25px -5px hsl(220 15% 20% / 0.1), 0 10px 10px -5px hsl(220 15% 20% / 0.04);
+
+    /* Animations */
+    --transition-base: all 0.2s ease-in-out;
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .dark {
+    /* Core Background & Text */
+    --background: 220 25% 8%;
+    --foreground: 220 15% 95%;
+
+    /* Card System */
+    --card: 220 25% 10%;
+    --card-foreground: 220 15% 95%;
+
+    /* Popover */
+    --popover: 220 25% 10%;
+    --popover-foreground: 220 15% 95%;
+
+    /* Primary Brand */
+    --primary: 215 70% 65%;
+    --primary-foreground: 220 25% 8%;
+    --primary-hover: 215 70% 70%;
+
+    /* Secondary */
+    --secondary: 220 15% 15%;
+    --secondary-foreground: 220 15% 85%;
+
+    /* Muted */
+    --muted: 220 15% 12%;
+    --muted-foreground: 220 10% 60%;
+
+    /* Accent */
+    --accent: 215 70% 60%;
+    --accent-foreground: 220 25% 8%;
+
+    /* Status Colors */
+    --success: 142 76% 50%;
+    --success-foreground: 220 25% 8%;
+    --warning: 38 92% 60%;
+    --warning-foreground: 220 25% 8%;
+    --destructive: 0 84% 65%;
+    --destructive-foreground: 220 25% 8%;
+
+    /* Borders & Inputs */
+    --border: 220 15% 20%;
+    --input: 220 15% 20%;
+    --ring: 215 70% 60%;
+
+    /* Dashboard Specific */
+    --dashboard-bg: 220 25% 6%;
+    --sidebar-bg: 220 30% 4%;
+    --sidebar-foreground: 220 15% 75%;
+    --sidebar-active: 215 70% 55%;
+    --sidebar-hover: 220 20% 8%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(215 70% 55%), hsl(215 70% 70%));
+    --gradient-accent: linear-gradient(135deg, hsl(215 70% 60%), hsl(215 70% 75%));
+    --gradient-success: linear-gradient(135deg, hsl(142 76% 45%), hsl(142 76% 60%));
+    --gradient-card: linear-gradient(145deg, hsl(220 25% 10%), hsl(220 25% 12%));
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}

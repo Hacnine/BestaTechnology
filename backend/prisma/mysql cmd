@@ -1,0 +1,5 @@
+UPDATE employees SET department = 'MERCHANDISING' WHERE department = 'Merchandising';
+UPDATE employees SET department = 'CAD_ROOM' WHERE department = 'CAD Room';
+
+
+DROP TABLE CostSheet;
