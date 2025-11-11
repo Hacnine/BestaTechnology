@@ -20,21 +20,21 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Setup npm
-        uses: npm/action-setup@v2
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
         with:
           version: 8
 
       - name: Install dependencies
-        run: npm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
         working-directory: BestaApparelsBackend
 
       - name: Prisma validate
-        run: npm run prisma:validate
+        run: pnpm run prisma:validate
         working-directory: BestaApparelsBackend
 
       - name: Prisma generate
-        run: npm run prisma:generate
+        run: pnpm run prisma:generate
         working-directory: BestaApparelsBackend
 
       - name: Upload prisma folder
