@@ -19,22 +19,18 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
+          cache: 'npm'
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm ci
         working-directory: backend
 
       - name: Prisma validate
-        run: pnpm run prisma:validate
+        run: npm run prisma:validate
         working-directory: backend
 
       - name: Prisma generate
-        run: pnpm run prisma:generate
+        run: npm run prisma:generate
         working-directory: backend
 
       - name: Upload prisma folder
