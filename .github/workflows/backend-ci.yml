@@ -27,21 +27,21 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-        working-directory: BestaApparelsBackend
+        working-directory: backend
 
       - name: Prisma validate
         run: pnpm run prisma:validate
-        working-directory: BestaApparelsBackend
+        working-directory: backend
 
       - name: Prisma generate
         run: pnpm run prisma:generate
-        working-directory: BestaApparelsBackend
+        working-directory: backend
 
       - name: Upload prisma folder
         uses: actions/upload-artifact@v4
         with:
           name: backend-prisma
-          path: BestaApparelsBackend/prisma
+          path: backend/prisma
 
   docker:
     name: Build & Push Docker image (optional)
@@ -63,7 +63,7 @@ jobs:
       - name: Build and push image
         uses: docker/build-push-action@v4
         with:
-          context: ./BestaApparelsBackend
-          file: ./BestaApparelsBackend/Dockerfile
+          context: ./backend
+          file: ./backend/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/bestaapparels-backend:latest
