@@ -47,8 +47,8 @@ jobs:
     name: Build & Push Docker image (optional)
     needs: test
     runs-on: ubuntu-latest
-    # Only run on main branch and when Docker credentials are provided in repository secrets
-    if: ${{ github.ref == 'refs/heads/main' && secrets.DOCKERHUB_USERNAME && secrets.DOCKERHUB_TOKEN }}
+    # Only run on main branch (Docker credentials optional)
+    if: github.ref == 'refs/heads/main'
 
     steps:
       - name: Checkout code
