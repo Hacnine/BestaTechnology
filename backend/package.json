@@ -24,7 +24,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@prisma/client": "^6.18.0",
+    "@prisma/client": "6.19.0",
     "@socket.io/redis-adapter": "^8.3.0",
     "bcryptjs": "^3.0.2",
     "body-parse": "^0.1.0",
@@ -62,6 +62,6 @@
   "devDependencies": {
     "cross-env": "^10.0.0",
     "nodemon": "^3.1.10",
-    "prisma": "^6.18.0"
+    "prisma": "^6.19.0"
   }
 }
