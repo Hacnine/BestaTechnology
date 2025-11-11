@@ -1,0 +1,46 @@
+name: Frontend CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  build:
+    name: Install, Lint and Build (Frontend)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Setup npm
+        uses: npm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: npm install --frozen-lockfile
+        working-directory: BestaApparelsFrontend
+
+      - name: Run linter
+        run: npm run lint
+        working-directory: BestaApparelsFrontend
+
+      - name: Build
+        run: npm run build
+        working-directory: BestaApparelsFrontend
+
+      - name: Upload dist artifact
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: BestaApparelsFrontend/dist
