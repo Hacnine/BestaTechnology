@@ -5,11 +5,9 @@ export const getAllCostSheets = async (req, res) => {
   const currentUserId = req.user?.id;
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
-  const search = req.query.search.trim() || "";
+  const search = req.query.search?.trim() || "";
   const offset = (page - 1) * limit;
   const orderBy = req.query.orderBy || "own";
-
-  // const orderBy = orderByRaw === "own" ? "createdBy" : "createdAt";
 
   try {
     // Build search filter (search by style name or item)
@@ -23,57 +21,26 @@ export const getAllCostSheets = async (req, res) => {
       };
     }
 
-    const totalCostSheets = await prisma.costSheet.count({ where });
-
+    let totalCostSheets = 0;
     let costSheets = [];
 
-    // Special ordering: show current user's cost sheets first
     if (orderBy === "own") {
-      const currentUserId = req.user?.id;
-      // Count how many belong to current user under the same filter
+      // Only show current user's cost sheets
       const ownWhere = { ...where, createdById: currentUserId };
-      const countOwn = await prisma.costSheet.count({ where: ownWhere });
+      totalCostSheets = await prisma.costSheet.count({ where: ownWhere });
 
-      if (offset < countOwn) {
-        // Page starts inside current user's items
-        const ownStart = offset;
-        const ownTake = Math.min(limit, countOwn - ownStart);
-        const ownItems = await prisma.costSheet.findMany({
-          where: ownWhere,
-          include: { style: true, createdBy: true },
-          skip: ownStart,
-          take: ownTake,
-          orderBy: { createdAt: "desc" },
-        });
-
-        costSheets = [...ownItems];
-
-        // if (ownTake < limit) {
-        //   const othersTake = limit - ownTake;
-        //   const others = await prisma.costSheet.findMany({
-        //     where: { ...where, createdById: { not: currentUserId } },
-        //     include: { style: true, createdBy: true },
-        //     skip: 0,
-        //     take: othersTake,
-        //     orderBy: { createdAt: "desc" },
-        //   });
-        //   costSheets = costSheets.concat(others);
-        // }
-      } else {
-        // Page starts in others
-        const othersOffset = offset - countOwn;
-        const others = await prisma.costSheet.findMany({
-          where: { ...where, createdById: { not: currentUserId } },
-          include: { style: true, createdBy: true },
-          skip: othersOffset,
-          take: limit,
-          orderBy: { createdAt: "desc" },
-        });
-        costSheets = others;
-      }
-    } else {
       costSheets = await prisma.costSheet.findMany({
-        where: { ...where },
+        where: ownWhere,
+        include: { style: true, createdBy: true },
+        skip: offset,
+        take: limit,
+        orderBy: { createdAt: "desc" },
+      });
+    } else {
+      // Show all cost sheets
+      totalCostSheets = await prisma.costSheet.count({ where });
+      costSheets = await prisma.costSheet.findMany({
+        where,
         include: { style: true, createdBy: true },
         skip: offset,
         take: limit,
@@ -84,23 +51,26 @@ export const getAllCostSheets = async (req, res) => {
     // Remove password from createdBy
     const sanitized = costSheets.map((cs) => ({
       ...cs,
-      createdBy: cs.name ? { name: cs.name, password: undefined } : cs.name,
+      createdBy: cs.createdBy ? { ...cs.createdBy, password: undefined } : null,
     }));
 
     const totalPages = Math.ceil(totalCostSheets / limit);
     const hasNextPage = page < totalPages;
     const hasPrevPage = page > 1;
+
     res.json({
       success: true,
       page,
       limit,
-      sanitized,
+      data: sanitized, // Changed from 'sanitized' to 'data' for clarity
       totalPages,
       hasNextPage,
       hasPrevPage,
       search: search || null,
+      totalCount: totalCostSheets, // Added total count for clarity
     });
   } catch (error) {
+    console.error("Error fetching cost sheets:", error);
     res.status(500).json({ error: "Failed to fetch cost sheets" });
   }
 };
