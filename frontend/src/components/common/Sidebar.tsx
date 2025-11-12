@@ -76,21 +76,6 @@ const navigationItemsMap: Record<string, any[]> = {
       icon: LayoutDashboard,
     },
     {
-      title: "Sample TNA",
-      href: `${APP_ROUTES.sample_tna}`,
-      icon: Rows4,
-    },
-    {
-      title: "Sample Fabric",
-      href: `${APP_ROUTES.sample_fabric}`,
-      icon: GitCommitHorizontal,
-    },
-    {
-      title: "Sample Room",
-      href: `${APP_ROUTES.sample_room}`,
-      icon: Webhook,
-    },
-    {
       title: "Reports",
       href: `${APP_ROUTES.reports}`,
       icon: ClipboardList,
