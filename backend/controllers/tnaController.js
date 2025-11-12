@@ -582,7 +582,7 @@ export async function getDepartmentProgressV2(req, res) {
       }),
       prisma.fabricBooking.findMany({
         where: { tnaId: { in: ids } },
-        select: { tnaId: true, actualReceiveDate: true }
+        select: { tnaId: true, actualCompleteDate: true }
       }),
       prisma.sampleDevelopment.findMany({
         where: { tnaId: { in: ids } },
