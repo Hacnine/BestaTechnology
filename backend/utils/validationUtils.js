@@ -45,7 +45,7 @@ export function validateAuth(req, res) {
 export async function isDhlTrackingComplete(res, prisma, style, shouldBeComplete = true) {
   try {
     const trackings = await prisma.dHLTracking.findMany({
-      where: { style }
+      where: { tna: { is: { style } } }
     });
 
     if (shouldBeComplete) {

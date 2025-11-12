@@ -353,16 +353,18 @@ export async function getTNASummary(req, res) {
     // If completed filter is provided, filter TNAs by DHLTracking's isComplete
     if (completed === "true" || completed === "false") {
       const styles = allTnas.map(tna => tna.style);
-      // Get all DHLTracking for these styles
+      // Get all DHLTracking for these styles by filtering through the related TNA
       const dhlTrackings = await prisma.dHLTracking.findMany({
-        where: { style: { in: styles } },
-        select: { style: true, isComplete: true },
+        where: { tna: { is: { style: { in: styles } } } },
+        select: { tna: { select: { style: true } }, isComplete: true },
       });
       // Build a map: style -> array of isComplete values
       const dhlMap = new Map();
       dhlTrackings.forEach(dhl => {
-        if (!dhlMap.has(dhl.style)) dhlMap.set(dhl.style, []);
-        dhlMap.get(dhl.style).push(dhl.isComplete);
+        const style = dhl.tna?.style;
+        if (!style) return;
+        if (!dhlMap.has(style)) dhlMap.set(style, []);
+        dhlMap.get(style).push(dhl.isComplete);
       });
 
       if (completed === "true") {
@@ -394,42 +396,40 @@ export async function getTNASummary(req, res) {
 
     const summary = await Promise.all(
       pagedTnas.map(async (tna) => {
-        // Get all cadDesign fields for the matching style
+        // Get cadDesign for the matching style via the related TNA
         const cad = await prisma.cadDesign.findFirst({
-          where: { style: tna.style },
+          where: { tna: { is: { style: tna.style } } },
         });
 
-        // Get FabricBooking for the style, omit createdAt and updatedAt
+        // Get FabricBooking for the style via the related TNA, omit createdAt and updatedAt
         const fabricBooking = await prisma.fabricBooking.findFirst({
-          where: { style: tna.style },
+          where: { tna: { is: { style: tna.style } } },
           select: {
             id: true,
-            style: true,
-            bookingDate: true,
+            tnaId: true,
             receiveDate: true,
-            actualBookingDate: true,
-            actualReceiveDate: true,
+            completeDate: true,
+            actualCompleteDate: true,
           },
         });
 
-        // Get SampleDevelopment for the style, omit createdAt and updatedAt
+        // Get SampleDevelopment for the style via the related TNA, omit createdAt and updatedAt
         const sampleDevelopment = await prisma.sampleDevelopment.findFirst({
-          where: { style: tna.style },
+          where: { tna: { is: { style: tna.style } } },
           select: {
             id: true,
-            style: true,
+            tnaId: true,
             samplemanName: true,
             sampleReceiveDate: true,
             sampleCompleteDate: true,
-            actualSampleReceiveDate: true,
             actualSampleCompleteDate: true,
             sampleQuantity: true,
           },
         });
 
-        // Get DHLTracking for the style, only needed fields
+        // Get DHLTracking for the style via the related TNA, only needed fields
         let dhlTracking = await prisma.dHLTracking.findFirst({
-          where: { style: tna.style },
+          where: { tna: { is: { style: tna.style } } },
           select: {
             date: true,
             trackingNumber: true,
@@ -513,7 +513,7 @@ export async function getTNASummaryCard(req, res) {
     today.setHours(0, 0, 0, 0); 
 
     tnas.forEach((tna) => {
-      const dhlArr = dhlMap[tna.style] || [];
+      const dhlArr = dhlMap.get(tna.id) || [];
       const isAnyComplete = dhlArr.some((dhl) => dhl.isComplete);
 
       if (isAnyComplete) {
