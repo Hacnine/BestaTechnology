@@ -224,6 +224,19 @@ const CostSheetTable = ({ onCopy }: CostSheetTableProps) => {
     }
   );
 
+  // Normalize API response: older backend returned `sanitized` array, newer returns an object with `data` array.
+  // `sheets` will always be an array for rendering.
+  const sheets: any[] = React.useMemo(() => {
+    if (!data) return [];
+    if (Array.isArray(data)) return data as any[]; // legacy shape
+    if ((data as any).sanitized) return (data as any).sanitized as any[];
+    if ((data as any).data) return (data as any).data as any[];
+    return [];
+  }, [data]);
+
+  const totalPages = (data && (data as any).totalPages) || 1;
+  const hasNextPage = (data && (data as any).hasNextPage) || false;
+
   const {
     data: singleSheetData,
     isLoading: isSheetLoading,
@@ -275,9 +288,7 @@ const CostSheetTable = ({ onCopy }: CostSheetTableProps) => {
 
   React.useEffect(() => {
     if (expandedId !== null) {
-      const base =
-        singleSheetData ||
-        data?.sanitized?.find((s: any) => s.id === expandedId);
+      const base = singleSheetData || sheets.find((s: any) => s.id === expandedId);
 
       const incomingCad = base?.cadRows;
       if (incomingCad) {
@@ -387,7 +398,7 @@ const CostSheetTable = ({ onCopy }: CostSheetTableProps) => {
         </div>
       </Card>
     );
-  } else if (!data || !data.sanitized || data.sanitized.length === 0) {
+  } else if (!data || sheets.length === 0) {
     content = (
       <Card className="p-4 w-full">
         <SearchHeader
@@ -441,7 +452,7 @@ const CostSheetTable = ({ onCopy }: CostSheetTableProps) => {
               </tr>
             </thead>
             <tbody>
-              {data.sanitized.map((sheet: any) => (
+              {sheets.map((sheet: any) => (
                 <React.Fragment key={sheet.id}>
                   <tr className="border-b hover:bg-muted/20">
                     <td className="p-2">
@@ -509,12 +520,12 @@ const CostSheetTable = ({ onCopy }: CostSheetTableProps) => {
             Previous
           </Button>
           <span className="px-2">
-            Page {page} of {data.totalPages || 1}
+            Page {page} of {totalPages}
           </span>
           <Button
             variant="outline"
             size="sm"
-            disabled={!data.hasNextPage}
+            disabled={!hasNextPage}
             onClick={() => setPage((p) => p + 1)}
           >
             Next
