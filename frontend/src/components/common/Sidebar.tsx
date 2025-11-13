@@ -179,8 +179,8 @@ export function Sidebar({ collapsed, onToggle }: AdminSidebarProps) {
   return (
     <div
       className={cn(
-        "relative bg-sidebar text-sidebar-foreground border-r border-border transition-all duration-300 h-screen overflow-y-auto",
-        collapsed ? "w-16" : "min-w-68"
+        "relative bg-sidebar text-sidebar-foreground border-r border-border h-screen overflow-y-auto animate__animated",
+        collapsed ? "w-16 " : "min-w-68 animate__slideInLeft animate__faster"
       )}
     >
       {/* Header */}
