@@ -19,9 +19,10 @@ import {
 import { X, Loader2, FileX } from "lucide-react";
 import { calculateTnaValues } from "@/utils/tnaCalculations";
 import CustomDateInput from "../ui/custom-date-input";
+import { useUser } from "@/redux/slices/userSlice";
 
   const SampleDevelopement = () => {
-    const [openForm, setOpenForm] = useState(false);
+    const { user } = useUser();
     const [form, setForm] = useState({
       style: "",
       samplemanName: "",
@@ -98,19 +99,32 @@ import CustomDateInput from "../ui/custom-date-input";
           sampleCompleteDate: "",
           sampleQuantity: "",
         });
-        setOpenForm(false);
         setEditId(null);
       } catch (error: any) {
         toast.error(error?.data?.error || 'Failed to submit Sample Development');
       }
     };
 
-    // Direct complete/accept handler (no modal)
+    // Direct complete handler (no modal)
     const handleComplete = async (row: any) => {
       try {
         await updateSampleDevelopment({
           id: row.id,
+          acceptance: false,
+        }).unwrap();
+        toast.success("Sample Development completed successfully");
+      } catch (error: any) {
+        toast.error(error?.data?.error || "Failed to complete Sample Development");
+      }
+    };
+
+    // Accept handler
+    const handleAccept = async (row: any) => {
+      try {
+        await updateSampleDevelopment({
+          id: row.id,
           acceptance: true,
+          samplemanName: user?.name || "Unknown",
         }).unwrap();
         toast.success("Sample Development accepted successfully");
       } catch (error: any) {
@@ -132,16 +146,12 @@ import CustomDateInput from "../ui/custom-date-input";
         sampleQuantity: row.sampleQuantity?.toString() || "",
       });
       setEditId(row.id);
-      setOpenForm(true);
     };
 
     return (
       <div className="p-4 space-y-6 ">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold text-foreground">Sample Development</h1>
-          <Button onClick={() => setOpenForm((prev) => !prev)}>
-            {openForm ? "Close Form" : "Add Sample Development"}
-          </Button>
         </div>
 
         {/* Search Controls */}
@@ -183,7 +193,7 @@ import CustomDateInput from "../ui/custom-date-input";
           </Button>
         </div>
 
-        {openForm && (
+        {/* {openForm && (
           <Card className="mt-4">
             <CardContent className="py-6">
               <form
@@ -269,7 +279,7 @@ import CustomDateInput from "../ui/custom-date-input";
               </form>
             </CardContent>
           </Card>
-        )}
+        )} */}
 
         {/* Sample Development Table */}
         <Card className="mt-4">
@@ -400,13 +410,21 @@ import CustomDateInput from "../ui/custom-date-input";
                             >
                               Completed
                             </Button>
-                          ) : (
+                          ) : row.samplemanName ? (
                             <Button
                               variant="outline"
                               size="sm"
                               onClick={() => handleComplete(row)}
                             >
                               Complete
+                            </Button>
+                          ) : (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleAccept(row)}
+                            >
+                              Accept
                             </Button>
                           )}
                           <Button
