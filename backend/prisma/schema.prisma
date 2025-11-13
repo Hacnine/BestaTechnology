@@ -192,7 +192,7 @@ model SampleDevelopment {
   id                       Int       @id @default(autoincrement())
   createdById              Int?
   createdBy                User?     @relation("UserCreatedSampleDevelopments", fields: [createdById], references: [id])
-  samplemanName            String
+  samplemanName            String?
   sampleReceiveDate        DateTime?
   sampleCompleteDate       DateTime?
   actualSampleCompleteDate DateTime?
