@@ -22,7 +22,7 @@ import {
   EyeOff,
   Trash,
   Search,
-  MoreHorizontal,
+  ChevronDown,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -74,7 +74,7 @@ const SearchHeader: React.FC<{
                 size="sm"
                 className="hidden py-5 md:inline-flex"
               >
-                <MoreHorizontal className="w-4 h-4 mr-2" />
+                <ChevronDown className="w-4 h-4 mr-2" />
                 {scope === "all" ? "All Cost Sheets" : "Own Cost Sheets"}
               </Button>
             </DropdownMenuTrigger>
