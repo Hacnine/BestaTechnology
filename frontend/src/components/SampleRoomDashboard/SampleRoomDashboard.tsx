@@ -20,8 +20,16 @@ import { X, Loader2, FileX } from "lucide-react";
 import { calculateTnaValues } from "@/utils/tnaCalculations";
 import CustomDateInput from "../ui/custom-date-input";
 import { useUser } from "@/redux/slices/userSlice";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
   const SampleDevelopement = () => {
+    const [openForm, setOpenForm] = useState(false);
     const { user } = useUser();
     const [form, setForm] = useState({
       style: "",
@@ -34,6 +42,11 @@ import { useUser } from "@/redux/slices/userSlice";
     const [updateSampleDevelopment, { isLoading: isUpdating }] = useUpdateSampleDevelopmentMutation();
 
     const [editId, setEditId] = useState<string | null>(null);
+
+    // Accept dialog states
+    const [acceptDialogOpen, setAcceptDialogOpen] = useState(false);
+    const [selectedRow, setSelectedRow] = useState<any>(null);
+    const [acceptSamplemanName, setAcceptSamplemanName] = useState("");
 
     // Pagination, search, and date filter state
     const [page, setPage] = useState(1);
@@ -100,6 +113,7 @@ import { useUser } from "@/redux/slices/userSlice";
           sampleQuantity: "",
         });
         setEditId(null);
+        setOpenForm(false);
       } catch (error: any) {
         toast.error(error?.data?.error || 'Failed to submit Sample Development');
       }
@@ -119,12 +133,12 @@ import { useUser } from "@/redux/slices/userSlice";
     };
 
     // Accept handler
-    const handleAccept = async (row: any) => {
+    const handleAccept = async (row: any, samplemanName: string) => {
       try {
         await updateSampleDevelopment({
           id: row.id,
           acceptance: true,
-          samplemanName: user?.name || "Unknown",
+          samplemanName,
         }).unwrap();
         toast.success("Sample Development accepted successfully");
       } catch (error: any) {
@@ -146,12 +160,14 @@ import { useUser } from "@/redux/slices/userSlice";
         sampleQuantity: row.sampleQuantity?.toString() || "",
       });
       setEditId(row.id);
+      setOpenForm(true);
     };
 
     return (
       <div className="p-4 space-y-6 ">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold text-foreground">Sample Development</h1>
+  
         </div>
 
         {/* Search Controls */}
@@ -193,7 +209,7 @@ import { useUser } from "@/redux/slices/userSlice";
           </Button>
         </div>
 
-        {/* {openForm && (
+        {openForm && (
           <Card className="mt-4">
             <CardContent className="py-6">
               <form
@@ -201,42 +217,12 @@ import { useUser } from "@/redux/slices/userSlice";
                 onSubmit={handleSubmit}
               >
                 <div>
-                  <label className="text-sm font-medium">Style</label>
-                  <Input
-                    name="style"
-                    value={form.style}
-                    onChange={handleChange}
-                    placeholder="Enter style"
-                    required
-                  />
-                </div>
-                <div>
                   <label className="text-sm font-medium">Sampleman Name</label>
                   <Input
                     name="samplemanName"
                     value={form.samplemanName}
                     onChange={handleChange}
                     placeholder="Enter sampleman name"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="text-sm font-medium">Sample Receive Date</label>
-                  <Input
-                    name="sampleReceiveDate"
-                    type="date"
-                    value={form.sampleReceiveDate}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="text-sm font-medium">Sample Complete Date</label>
-                  <Input
-                    name="sampleCompleteDate"
-                    type="date"
-                    value={form.sampleCompleteDate}
-                    onChange={handleChange}
                     required
                   />
                 </div>
@@ -279,7 +265,7 @@ import { useUser } from "@/redux/slices/userSlice";
               </form>
             </CardContent>
           </Card>
-        )} */}
+        )}
 
         {/* Sample Development Table */}
         <Card className="mt-4">
@@ -422,7 +408,10 @@ import { useUser } from "@/redux/slices/userSlice";
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => handleAccept(row)}
+                              onClick={() => {
+                                setSelectedRow(row);
+                                setAcceptDialogOpen(true);
+                              }}
                             >
                               Accept
                             </Button>
@@ -473,6 +462,34 @@ import { useUser } from "@/redux/slices/userSlice";
             </div>
           </CardContent>
         </Card>
+
+        {/* Accept Dialog */}
+        <Dialog open={acceptDialogOpen} onOpenChange={setAcceptDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Accept Sample Development</DialogTitle>
+            </DialogHeader>
+            <div>
+              <label className="text-sm font-medium">Sampleman Name</label>
+              <Input
+                value={acceptSamplemanName}
+                onChange={(e) => setAcceptSamplemanName(e.target.value)}
+                placeholder="Enter sampleman name"
+                required
+              />
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setAcceptDialogOpen(false)}>Cancel</Button>
+              <Button onClick={() => {
+                if (selectedRow && acceptSamplemanName) {
+                  handleAccept(selectedRow, acceptSamplemanName);
+                  setAcceptDialogOpen(false);
+                  setAcceptSamplemanName("");
+                }
+              }}>Accept</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     );
   };
