@@ -59,6 +59,7 @@ const StyleInfoFormCreate = ({ form }: StyleInfoFormCreateProps) => {
                 accept="image/*"
                 onChange={handleImageUpload}
                 className="hidden"
+                required
                 key={selectedImage ? "file-selected" : "file-empty"}
               />
               <Label
@@ -104,6 +105,7 @@ const StyleInfoFormCreate = ({ form }: StyleInfoFormCreateProps) => {
               form.setValue("style", filteredValue);
             }}
             className="uppercase"
+            required
             placeholder="Enter style code"
           />
         </div>
@@ -114,6 +116,7 @@ const StyleInfoFormCreate = ({ form }: StyleInfoFormCreateProps) => {
           <Input
             id="item"
             value={values?.item ?? ""}
+            required
             onChange={(e) => form.setValue("item", e.target.value)}
             placeholder="e.g., Baby Jogging Tops"
           />
@@ -125,6 +128,7 @@ const StyleInfoFormCreate = ({ form }: StyleInfoFormCreateProps) => {
           <Input
             id="group"
             value={values?.group ?? ""}
+            required
             onChange={(e) => form.setValue("group", e.target.value)}
             placeholder="e.g., Boys"
           />
@@ -136,6 +140,7 @@ const StyleInfoFormCreate = ({ form }: StyleInfoFormCreateProps) => {
           <Input
             id="size"
             value={values?.size ?? ""}
+            required
             onChange={(e) => form.setValue("size", e.target.value)}
             placeholder="e.g., 03/SS26"
           />
@@ -149,6 +154,7 @@ const StyleInfoFormCreate = ({ form }: StyleInfoFormCreateProps) => {
             value={values?.fabricType ?? ""}
             onChange={(e) => form.setValue("fabricType", e.target.value)}
             placeholder="e.g., Fleece, 85% Cotton"
+            required
           />
         </div>
         <div className="pt-5">
@@ -160,6 +166,7 @@ const StyleInfoFormCreate = ({ form }: StyleInfoFormCreateProps) => {
             value={values?.gsm ?? ""}
             onChange={(e) => form.setValue("gsm", e.target.value)}
             placeholder="e.g., 320"
+            required
           />
         </div>
         <div className="pt-5">
@@ -171,6 +178,7 @@ const StyleInfoFormCreate = ({ form }: StyleInfoFormCreateProps) => {
             value={values?.color ?? ""}
             onChange={(e) => form.setValue("color", e.target.value)}
             placeholder="e.g., 01X"
+            required
           />
         </div>
 
@@ -183,6 +191,7 @@ const StyleInfoFormCreate = ({ form }: StyleInfoFormCreateProps) => {
             value={values?.buyer ?? ""}
             onChange={(e) => form.setValue("buyer", e.target.value)}
             placeholder="Enter buyer name"
+            required
           />
         </div>
         <div className="pt-5">
@@ -194,6 +203,7 @@ const StyleInfoFormCreate = ({ form }: StyleInfoFormCreateProps) => {
             value={values?.brand ?? ""}
             onChange={(e) => form.setValue("brand", e.target.value)}
             placeholder="Enter brand name"
+            required
           />
         </div>
         <div className="pt-5">
