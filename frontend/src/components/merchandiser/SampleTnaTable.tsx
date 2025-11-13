@@ -17,6 +17,9 @@ import { BuyerModal, CadModal, FabricModal, LeadTimeModal, SampleModal } from ".
 import { useCreateDHLTrackingMutation } from "@/redux/api/dHLTrackingApi";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Download, Filter } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import CustomDateInput from "../ui/custom-date-input";
 import url from "@/config/urls";
 import * as XLSX from "xlsx";
 import { exportSampleTnaExcel } from "../../utils/exportSampleTnaExcel";
@@ -228,58 +231,56 @@ const SampleTnaTable = ({ readOnlyModals = false }: SampleTnaTableProps) => {
       <div className="overflow-x-auto w-full">
         {/* Search Controls */}
         <div className="flex items-center justify-between mb-4">
-          <div className="flex flex-wrap gap-2 mb-4 items-end  w-[85%]">
-            <div>
-            <label className="block text-xs font-medium mb-1">Search</label>
-            <input
-              type="text"
-              className="border rounded px-2 py-1 md:w-[400px] placeholder:text-xs"
-              placeholder="Name, Date, Style"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-            />
-          </div>
-          <div>
-            <label className="block text-xs font-medium mb-1">Start Date</label>
-            <input
-              type="date"
-              className="border rounded px-2 py-1"
+          <div className="flex flex-wrap gap-2 mb-4 items-end w-[85%]">
+            <div className="relative">
+              <label className="block text-xs font-medium mb-1">Search</label>
+              <Input
+                type="text"
+                className="md:w-[400px] placeholder:text-sm"
+                placeholder="Name, Date, Style"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+
+            <CustomDateInput
+              label="Start Date"
               value={startDate}
-              onChange={e => setStartDate(e.target.value)}
+              onChange={(e: any) => setStartDate(e.target.value)}
             />
-          </div>
-          <div>
-            <label className="block text-xs font-medium mb-1">End Date</label>
-            <input
-              type="date"
-              className="border rounded px-2 py-1"
+
+            <CustomDateInput
+              label="End Date"
               value={endDate}
-              onChange={e => setEndDate(e.target.value)}
+              onChange={(e: any) => setEndDate(e.target.value)}
             />
-          </div>
-          {/* Completed Dropdown */}
-          <div>
-            <label className="block text-xs font-medium mb-1">Status</label>
-            <select
-              className="border rounded px-2 py-1"
-              value={completed}
-              onChange={e => setCompleted(e.target.value as "false" | "true")}
+
+            {/* Completed Dropdown (shadcn Select) */}
+            <div>
+              <label className="block text-xs font-medium mb-1">Status</label>
+              <Select value={completed} onValueChange={(v) => setCompleted(v as "false" | "true") }>
+                <SelectTrigger className="w-36">
+                  <SelectValue placeholder="Select status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="false">On Process</SelectItem>
+                  <SelectItem value="true">Completed</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <Button
+              variant="outline"
+              size="sm"
+              className="bg-red-50 hover:bg-red-100 border-red-200 text-red-600 hover:text-red-700"
+              onClick={() => {
+                setSearch("");
+                setStartDate("");
+                setEndDate("");
+              }}
             >
-              <option value="false">On Process</option>
-              <option value="true">Completed</option>
-            </select>
-          </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              setSearch("");
-              setStartDate("");
-              setEndDate("");
-            }}
-          >
-            Clear
-          </Button>
+              Clear
+            </Button>
           </div>
 
            <div className="flex items-center justify-end gap-2 ">
