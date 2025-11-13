@@ -76,10 +76,11 @@ export default function SampleTna() {
           </div>
           <Button
             variant="outline"
+            className="bg-red-50 hover:bg-red-100 border-red-200 text-red-600 hover:text-red-700"
             size="sm"
             onClick={() => setSearch("")}
             disabled={!search}
-          >
+          > 
             Clear
           </Button>
         </div>
