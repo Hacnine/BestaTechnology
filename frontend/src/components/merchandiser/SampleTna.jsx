@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { PageHeader } from "@/components/ui/page-header";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Plus } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Plus, Search } from "lucide-react";
 import TnaForm from "./TnaForm";
 import url from "@/config/urls";
 
@@ -57,16 +58,22 @@ export default function SampleTna() {
       {/* Search Input - match table width */}
       <Card className="p-4 mb-4">
         <div className="flex items-center gap-2 w-full">
-          <input
-            type="text"
-            placeholder="Search by style, item, buyer, etc."
-            value={search}
-            onChange={e => {
-              setSearch(e.target.value);
-              setPage(1); // Reset to first page on new search
-            }}
-            className="border rounded px-2 py-1 w-full max-w-[400px]"
-          />
+          <div className="w-full">
+            <div className="relative w-full">
+              <Input
+                type="text"
+                className="w-full placeholder:text-sm pl-8 border rounded-md"
+                placeholder="Search By Style "
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setPage(1); // Reset to first page on new search
+                }}
+                disabled={isLoading}
+              />
+              <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+            </div>
+          </div>
           <Button
             variant="outline"
             size="sm"
