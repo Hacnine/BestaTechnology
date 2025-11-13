@@ -53,16 +53,7 @@ const navigationItemsMap: Record<string, any[]> = {
       href: `${APP_ROUTES.admin_buyer}`,
       icon: Barcode,
     },
-    // {
-    //   title: "TNA Progress",
-    //   href: `${APP_ROUTES.admin_tna}`,
-    //   icon: TrendingUp,
-    // },
-    // {
-    //   title: "Audit Logs",
-    //   href: `${APP_ROUTES.admin_audit}`,
-    //   icon: Activity,
-    // },
+
     {
       title: "Reports",
       href: `${APP_ROUTES.admin_reports}`,
@@ -74,6 +65,11 @@ const navigationItemsMap: Record<string, any[]> = {
       title: "Dashboard",
       href: `${APP_ROUTES.merchandiser_dashboard}`,
       icon: LayoutDashboard,
+    },
+    {
+      title: "Sample TNA",
+      href: `${APP_ROUTES.sample_tna}`,
+      icon: Rows4,
     },
     {
       title: "Reports",
@@ -97,7 +93,7 @@ const navigationItemsMap: Record<string, any[]> = {
       title: "Trim & Accessories",
       href: `${APP_ROUTES.management_trims_edit}`,
       icon: Package,
-    }
+    },
   ],
   CAD: [
     {
@@ -113,7 +109,7 @@ const navigationItemsMap: Record<string, any[]> = {
       icon: GitCommitHorizontal,
     },
   ],
-    SAMPLE_ROOM: [
+  SAMPLE_ROOM: [
     {
       title: "Sample Room Dashboard",
       href: "/sample-room/dashboard",
@@ -176,7 +172,8 @@ function NavItem({ item, collapsed, iconSize = "w-5 h-5" }: NavItemProps) {
 export function Sidebar({ collapsed, onToggle }: AdminSidebarProps) {
   const { user } = useUser();
 
-  const location = useLocation();console.log(user?.role)
+  const location = useLocation();
+  console.log(user?.role);
   const navigationItems = navigationItemsMap[user?.role] || [];
   const settingsItems = settingsItemsMap[user?.role] || [];
   return (
@@ -268,7 +265,7 @@ export function Sidebar({ collapsed, onToggle }: AdminSidebarProps) {
         ) : (
           <div className="flex flex-col items-center space-y-3 ">
             <div className="w-6 h-6 border-2 rounded-full flex items-center justify-center">
-             <User />
+              <User />
             </div>
             <LogoutButton collapsed={collapsed} />
           </div>
