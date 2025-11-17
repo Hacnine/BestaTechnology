@@ -60,8 +60,11 @@ const SampleDevelopement = () => {
   const [search, setSearch] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [actualCompleteDate, setActualCompleteDate] = useState("");
   const startDateRef = useRef<HTMLInputElement>(null);
   const endDateRef = useRef<HTMLInputElement>(null);
+  const actualCompleteDateRef = useRef<HTMLInputElement>(null);
+
 
   const {
     data,
@@ -73,6 +76,7 @@ const SampleDevelopement = () => {
     search: search || undefined,
     startDate: startDate || undefined,
     endDate: endDate || undefined,
+    actualCompleteDate: actualCompleteDate || undefined,
   });
 
   // determine if any row has an actual completion date to conditionally show the column
@@ -208,6 +212,12 @@ const SampleDevelopement = () => {
           value={endDate}
           onChange={(e) => setEndDate(e.target.value)}
         />
+        <CustomDateInput
+          ref={actualCompleteDateRef}
+          label="Actual Complete Date"
+          value={actualCompleteDate}
+          onChange={(e) => setActualCompleteDate(e.target.value)}
+        />
         <Button
           variant="outline"
           size="sm"
@@ -216,6 +226,7 @@ const SampleDevelopement = () => {
             setSearch("");
             setStartDate("");
             setEndDate("");
+            setActualCompleteDate("");
           }}
         >
           <X className="h-4 w-4 mr-1" />
@@ -437,7 +448,7 @@ const SampleDevelopement = () => {
                         </TableCell>
                       )}
                       <TableCell>{row.sampleQuantity}</TableCell>
-                      <TableCell>
+                      <TableCell className=" flex items-center gap-2">
                         {row.actualSampleCompleteDate ? (
                           <Button variant="outline" size="sm" disabled>
                             Completed

@@ -56,6 +56,7 @@ export const getSampleDevelopment = async (req, res) => {
       search,
       startDate,
       endDate,
+      actualCompleteDate,
     } = req.query;
     const skip = (parseInt(page) - 1) * parseInt(pageSize);
     const take = parseInt(pageSize);
@@ -89,6 +90,18 @@ export const getSampleDevelopment = async (req, res) => {
     } else if (endDate) {
       where.sampleReceiveDate = {
         lte: new Date(endDate),
+      };
+    }
+
+    // Filter by actualSampleCompleteDate range (full day)
+    if (actualCompleteDate) {
+      const startOfDay = new Date(actualCompleteDate);
+      startOfDay.setHours(0, 0, 0, 0);
+      const endOfDay = new Date(actualCompleteDate);
+      endOfDay.setHours(23, 59, 59, 999);
+      where.actualSampleCompleteDate = {
+        gte: startOfDay,
+        lte: endOfDay,
       };
     }
 
