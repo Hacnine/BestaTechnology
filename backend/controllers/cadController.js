@@ -49,14 +49,19 @@ export const getCadApproval = async (req, res) => {
 
     // Filter by ownership: if ownCad=true, show only user's own CAD designs
     // if ownCad=false or not provided, show all CAD designs
+    console.log("req.user:", req.user);
+    console.log("ownCad:", ownCad, "type:", typeof ownCad);
     if (ownCad === "true") {
+      console.log("ownCad parameter:", ownCad);
       where.createdById = req.user && req.user.id ? req.user.id : undefined;
+      console.log("where.createdById set to:", where.createdById);
     }
+    console.log("Final where clause:", where);
 
     // Search by style or CadMasterName (case-insensitive)
     if (search) {
       where.OR = [
-        { style: { contains: search } },
+        { tna: { style: { contains: search } } },
         { CadMasterName: { contains: search } },
       ];
     }
@@ -137,6 +142,7 @@ export const updateCadDesign = async (req, res) => {
       const updatedCad = await prisma.cadDesign.update({
         where: { id: cadId },
         data: {
+          ... ({createdById: req.user.id}),
           ...( { fileReceiveDate: new Date() }),
           ...( {
             completeDate: (() => {

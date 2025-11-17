@@ -318,7 +318,7 @@ const SampleTnaTable = ({ readOnlyModals = false }: SampleTnaTableProps) => {
         </TableCell>
       </TableRow>
     ) : (
-      (tnaSummary || []).map((row: any) => {
+      (tnaSummary || []).map((row: any, index: number) => {
         // Calculate all TNA values using the utility function
         const {
           cadRemaining,
@@ -332,7 +332,7 @@ const SampleTnaTable = ({ readOnlyModals = false }: SampleTnaTableProps) => {
         } = calculateTnaValues(row);
 
         return (
-          <TableRow key={row.id}>
+          <TableRow key={row.id} className="animate__animated animate__fadeInUp" style={{ animationDelay: `${index * 0.05}s` }}>
             <TableCell>{row.itemName || ""}</TableCell>
             <TableCell>
               {row.itemImage ? (

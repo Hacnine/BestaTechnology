@@ -24,8 +24,15 @@ import { Loader2 } from "lucide-react";
 import { FileX } from "lucide-react";
 import { Search } from "lucide-react";
 import { X } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import "animate.css";
 import SearchInput from "@/components/ui/search-input";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const CadDesignDashboard = () => {
   const [openForm, setOpenForm] = useState(false);
@@ -48,6 +55,7 @@ const CadDesignDashboard = () => {
   const [search, setSearch] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [ownCad, setOwnCad] = useState(true);
 
   // Refs for date inputs
   const startDateRef = useRef<HTMLInputElement>(null);
@@ -61,12 +69,13 @@ const CadDesignDashboard = () => {
       search: search || undefined,
       startDate: startDate || undefined,
       endDate: endDate || undefined,
+      ownCad: ownCad,
     });
 
   // Reset to first page on filter change
   useEffect(() => {
     setPage(1);
-  }, [search, startDate, endDate]);
+  }, [search, startDate, endDate, ownCad]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -162,11 +171,38 @@ const CadDesignDashboard = () => {
             setSearch("");
             setStartDate("");
             setEndDate("");
+            setOwnCad(false);
           }}
         >
           <X className="h-4 w-4 mr-1" />
           Clear
         </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="w-48">
+              {ownCad ? "Own CAD Designs" : "All CAD Designs"}
+              <ChevronDown className="ml-2 h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem
+              onSelect={() => {
+                setOwnCad(true);
+                setPage(1);
+              }}
+            >
+              Own CAD Designs
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onSelect={() => {
+                setOwnCad(false);
+                setPage(1);
+              }}
+            >
+              All CAD Designs
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       {openForm && (
@@ -371,10 +407,10 @@ const CadDesignDashboard = () => {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="border-2 border-green-700 hover:border-transparent text-green-700"
+                          className=" bg-green-700 hover:border-transparent text-white"
                           onClick={() => handleAccept(row, false)}
                         >
-                          Finish
+                          Complete
                         </Button>
                       ) : (
                         <Button
