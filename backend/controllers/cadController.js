@@ -44,19 +44,17 @@ export const getCadApproval = async (req, res) => {
     const skip = (parseInt(page) - 1) * parseInt(pageSize);
     const take = parseInt(pageSize);
 
-    // Build where clause
     const where = {};
 
-    // Filter by ownership: if ownCad=true, show only user's own CAD designs
-    // if ownCad=false or not provided, show all CAD designs
-    console.log("req.user:", req.user);
-    console.log("ownCad:", ownCad, "type:", typeof ownCad);
     if (ownCad === "true") {
       console.log("ownCad parameter:", ownCad);
       where.createdById = req.user && req.user.id ? req.user.id : undefined;
       console.log("where.createdById set to:", where.createdById);
+    } else if (ownCad === "false") {
+      console.log("ownCad is false - excluding records with createdById");
+      // Only include CAD designs that were not created by any user (createdById is null)
+      where.createdById = null;
     }
-    console.log("Final where clause:", where);
 
     // Search by style or CadMasterName (case-insensitive)
     if (search) {
