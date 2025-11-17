@@ -127,6 +127,7 @@ export const getSampleDevelopment = async (req, res) => {
               merchandiser: {
                 select: { userName: true },
               },
+              sampleType:true,
             },
           },
         },

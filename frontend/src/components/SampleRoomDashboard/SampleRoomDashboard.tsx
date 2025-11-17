@@ -298,9 +298,11 @@ const SampleDevelopement = () => {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead>SN</TableHead>
                 <TableHead>Style</TableHead>
                 <TableHead>Item Image</TableHead>
                 <TableHead>Merchandiser</TableHead>
+                <TableHead>Smaple Type</TableHead>
                 <TableHead>Sampleman Name</TableHead>
                 <TableHead>Receive Date</TableHead>
                 <TableHead>Estimated Date</TableHead>
@@ -366,6 +368,7 @@ const SampleDevelopement = () => {
                       className="animate__animated animate__fadeInUp"
                       style={{ animationDelay: `${index * 0.05}s` }}
                     >
+                      <TableCell>{index + 1}</TableCell>
                       <TableCell>{row.tna?.style}</TableCell>
                       <TableCell>
                         {row.tna?.itemImage ? (
@@ -385,6 +388,8 @@ const SampleDevelopement = () => {
                           {row.tna?.merchandiser?.userName || "N/A"}
                         </span>
                       </TableCell>
+                      <TableCell>{row.tna?.sampleType}</TableCell>
+
                       <TableCell>
                         <span className="text-sky-500 font-medium ">
                           {row.samplemanName
