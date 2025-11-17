@@ -25,6 +25,7 @@ import { FileX } from "lucide-react";
 import { Search } from "lucide-react";
 import { X } from "lucide-react";
 import "animate.css";
+import SearchInput from "@/components/ui/search-input";
 
 const CadDesignDashboard = () => {
   const [openForm, setOpenForm] = useState(false);
@@ -136,17 +137,11 @@ const CadDesignDashboard = () => {
 
       {/* Search Controls */}
       <div className="flex flex-wrap gap-2 mb-4 items-end w-[85%]">
-        <div className="relative">
-          <label className="block text-xs font-medium mb-1">Search</label>
-          <Input
-            type="text"
-            className="md:w-[300px] placeholder:text-sm pl-8"
-            placeholder="Search By Style, Name "
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <Search className="absolute left-2 top-8 h-4 w-4 text-gray-400 pointer-events-none" />
-        </div>
+        <SearchInput
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search By Style, Name"
+        />
         <CustomDateInput
           ref={startDateRef}
           label="Start Date"

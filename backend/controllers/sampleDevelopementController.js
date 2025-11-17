@@ -71,7 +71,7 @@ export const getSampleDevelopment = async (req, res) => {
     // Search by style or samplemanName (case-insensitive)
     if (search) {
       where.OR = [
-        { style: { contains: search } },
+        { tna: { style: { contains: search } } },
         { samplemanName: { contains: search } },
       ];
     }

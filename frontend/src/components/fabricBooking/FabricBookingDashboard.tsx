@@ -22,6 +22,7 @@ import { Search, X, Loader2, FileX } from "lucide-react";
 import { PageHeader } from "@/components/ui/page-header";
 import CustomDateInput from "@/components/ui/custom-date-input";
 import { calculateFabricValues } from "@/utils/fabricCalculations";
+import SearchInput from "@/components/ui/search-input";
 
 const FabricBooking = () => {
   const [openForm, setOpenForm] = useState(false);
@@ -131,17 +132,11 @@ const FabricBooking = () => {
 
       {/* Search Controls */}
       <div className="flex flex-wrap gap-2 mb-4 items-end w-[85%]">
-        <div className="relative">
-          <label className="block text-xs font-medium mb-1">Search</label>
-          <Input
-            type="text"
-            className="md:w-[300px] placeholder:text-sm pl-8"
-            placeholder="Search By Style, Name "
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <Search className="absolute left-2 top-8 h-4 w-4 text-gray-400 pointer-events-none" />
-        </div>
+        <SearchInput
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search By Style, Name"
+        />
         <CustomDateInput
           ref={startDateRef}
           label="Start Date"
