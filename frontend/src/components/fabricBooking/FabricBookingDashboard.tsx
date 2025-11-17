@@ -173,8 +173,8 @@ const FabricBooking = () => {
         </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="w-48">
-              {ownBooking ? "Own Bookings" : "All Bookings"}
+            <Button variant="outline" className="w-40">
+              {ownBooking ? "Own Bookings" : "Unaccepted Bookings"}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
@@ -192,7 +192,7 @@ const FabricBooking = () => {
                 setPage(1);
               }}
             >
-              All Bookings
+              Unaccepted Bookings
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -274,6 +274,7 @@ const FabricBooking = () => {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead>SN</TableHead>
                 <TableHead>Style</TableHead>
                 <TableHead>Item Image</TableHead>
                 <TableHead>Merchandiser</TableHead>
@@ -325,6 +326,7 @@ const FabricBooking = () => {
                   });
                   return (
                     <TableRow key={row.id} className="animate__animated animate__fadeInUp" style={{ animationDelay: `${index * 0.05}s` }}>
+                      <TableCell>{index + 1}</TableCell>
                       <TableCell>{row.tna?.style}</TableCell>
                       <TableCell>
                         {row.tna?.itemImage ? (
