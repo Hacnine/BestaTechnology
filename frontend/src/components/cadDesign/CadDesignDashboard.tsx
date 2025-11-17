@@ -313,6 +313,7 @@ const CadDesignDashboard = () => {
                 </TableRow>
               ) : tableError ? (
                 <TableRow>
+                  
                   <TableCell colSpan={7} className="text-center py-8">
                     <div className="text-red-500">
                       <p className="font-medium">Failed to load CAD approvals</p>
@@ -346,7 +347,7 @@ const CadDesignDashboard = () => {
                   });
                   return (
                   <TableRow key={row.id} className="animate__animated animate__fadeInUp" style={{ animationDelay: `${index * 0.05}s` }}>
-                    <TableCell>{row.tna?.style}</TableCell>
+                    <TableCell className="uppercase">{row.tna?.style}</TableCell>
                     <TableCell>
                       {row.tna?.itemImage ? (
                         <img
