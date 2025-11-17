@@ -23,6 +23,12 @@ import { PageHeader } from "@/components/ui/page-header";
 import CustomDateInput from "@/components/ui/custom-date-input";
 import { calculateFabricValues } from "@/utils/fabricCalculations";
 import SearchInput from "@/components/ui/search-input";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const FabricBooking = () => {
   const [openForm, setOpenForm] = useState(false);
@@ -44,6 +50,7 @@ const FabricBooking = () => {
   const [search, setSearch] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [ownBooking, setOwnBooking] = useState(true);
 
   // Refs for date inputs
   const startDateRef = useRef<HTMLInputElement>(null);
@@ -57,6 +64,7 @@ const FabricBooking = () => {
       search: search || undefined,
       startDate: startDate || undefined,
       endDate: endDate || undefined,
+      ownFabric: ownBooking,
     });
 
   // Reset to first page on filter change
@@ -157,11 +165,37 @@ const FabricBooking = () => {
             setSearch("");
             setStartDate("");
             setEndDate("");
+            setOwnBooking(false);
           }}
         >
           <X className="h-4 w-4 mr-1" />
           Clear
         </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="w-48">
+              {ownBooking ? "Own Bookings" : "All Bookings"}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem
+              onSelect={() => {
+                setOwnBooking(true);
+                setPage(1);
+              }}
+            >
+              Own Bookings
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onSelect={() => {
+                setOwnBooking(false);
+                setPage(1);
+              }}
+            >
+              All Bookings
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       {openForm && (

@@ -31,7 +31,7 @@ export const createFabricBooking = async (req, res) => {
 // Add getFabricBooking with pagination
 export const getFabricBooking = async (req, res) => {
   try {
-    const { page = 1, pageSize = 10, search, startDate, endDate } = req.query;
+    const { page = 1, pageSize = 10, search, startDate, endDate, ownFabric } = req.query;
     const skip = (parseInt(page) - 1) * parseInt(pageSize);
     const take = parseInt(pageSize);
 
@@ -53,6 +53,16 @@ export const getFabricBooking = async (req, res) => {
       // Only return fabric bookings for the matching TNAs
       tnaId: { in: ids },
     };
+
+    // Ownership filter:
+    // - if ownFabric === 'true'  => show only current user's fabric bookings (createdById == req.user.id)
+    // - if ownFabric === 'false' => show only unassigned bookings (createdById == null)
+    // - if ownFabric is not provided => no ownership filter (show all)
+    if (ownFabric === "true") {
+      where.createdById = req.user && req.user.id ? req.user.id : undefined;
+    } else if (ownFabric === "false") {
+      where.createdById = null;
+    }
 
     // Filter by bookingDate range
     if (startDate && endDate) {
