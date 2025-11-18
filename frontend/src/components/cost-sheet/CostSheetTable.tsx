@@ -436,6 +436,7 @@ const CostSheetTable = ({ onCopy }: CostSheetTableProps) => {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b bg-muted/30">
+                <th className="text-left p-2">S/N</th>
                 <th className="text-left p-2">Image</th>
                 <th className="text-left p-2">Style</th>
                 <th className="text-left p-2">Item</th>
@@ -452,9 +453,10 @@ const CostSheetTable = ({ onCopy }: CostSheetTableProps) => {
               </tr>
             </thead>
             <tbody>
-              {sheets.map((sheet: any) => (
+              {sheets.map((sheet: any, index: number) => (
                 <React.Fragment key={sheet.id}>
                   <tr className="border-b hover:bg-muted/20">
+                    <td className="p-2 font-medium">{(page - 1) * limit + index + 1}</td>
                     <td className="p-2">
                       {sheet.image ? (
                         <img
