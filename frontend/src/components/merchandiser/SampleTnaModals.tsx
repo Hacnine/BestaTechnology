@@ -1,6 +1,7 @@
 import React from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { useAppSelector, selectCurrentUser } from "@/redux/slices/userSlice";
 
 // Buyer Modal
 export const BuyerModal = ({ open, onClose, buyerInfo }: any) => (
@@ -79,72 +80,62 @@ export const CadModal = ({
   onUpdate,
   isUpdating,
   readOnly = false,
-}: any) => (
-  <Dialog open={open} onOpenChange={onOpenChange}>
-    <DialogContent>
-      <DialogHeader>
-        <DialogTitle>CAD Details</DialogTitle>
-      </DialogHeader>
-      {cad && (
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <strong>Style:</strong> {cad.style}
-          </div>
-          <div>
-            <strong>CAD Master Name:</strong> {cad.CadMasterName}
-          </div>
-          <div>
-            <strong>File Receive Date:</strong>{" "}
-            {cad.fileReceiveDate ? new Date(cad.fileReceiveDate).toLocaleDateString() : ""}
-          </div>
-          <div>
-            <strong>Complete Date:</strong>{" "}
-            {cad.completeDate ? new Date(cad.completeDate).toLocaleDateString() : ""}
-          </div>
-          <div>
-            <label className="block text-sm font-medium">Actual File Received Date</label>
-            <input
-              type="date"
-              className="border rounded px-2 py-1 w-full"
-              value={finalFileReceivedDate}
-              onChange={e => setFinalFileReceivedDate(e.target.value)}
-              readOnly={readOnly}
-            />
-            {cad.finalFileReceivedDate && (
-              <div className="text-xs text-muted-foreground mt-1">
-                Current: {new Date(cad.finalFileReceivedDate).toLocaleDateString()}
-              </div>
-            )}
-          </div>
-          <div>
-            <label className="block text-sm font-medium">Actual Complete Date</label>
-            <input
-              type="date"
-              className="border rounded px-2 py-1 w-full"
-              value={finalCompleteDate}
-              onChange={e => setFinalCompleteDate(e.target.value)}
-              readOnly={readOnly}
-            />
-            {cad.finalCompleteDate && (
-              <div className="text-xs text-muted-foreground mt-1">
-                Current: {new Date(cad.finalCompleteDate).toLocaleDateString()}
-              </div>
-            )}
-          </div>
-          <div className="col-span-2 flex justify-end">
-            {readOnly ? (
+}: any) => {
+  const currentUser = useAppSelector(selectCurrentUser);
+  const isAdmin = currentUser?.role === "ADMIN";
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>CAD Details</DialogTitle>
+        </DialogHeader>
+        {cad && (
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <strong>CAD Master Name:</strong> {cad.CadMasterName}
+            </div>
+            <div>
+              <strong>File Receive Date:</strong>{" "}
+              {cad.fileReceiveDate ? new Date(cad.fileReceiveDate).toLocaleDateString() : ""}
+            </div>
+            <div>
+              <strong>Complete Date:</strong>{" "}
+              {cad.completeDate ? new Date(cad.completeDate).toLocaleDateString() : ""}
+            </div>
+            <div className="flex items-center">
+              <strong>Actual Complete Date:</strong>
+              {isAdmin && (
+                <input
+                  type="date"
+                  className="border rounded px-2 py-1 w-full"
+                  value={finalCompleteDate}
+                  onChange={e => setFinalCompleteDate(e.target.value)}
+                  readOnly={readOnly}
+                />
+              )}
+              {cad.finalCompleteDate && (
+                <span>
+                 {new Date(cad.finalCompleteDate).toLocaleDateString()}
+                </span>
+              )}
+            </div>
+            <div className="col-span-2 flex justify-end">
               <Button onClick={() => onOpenChange(false)}>Close</Button>
-            ) : (
-              <Button onClick={onUpdate} disabled={isUpdating}>
-                {isUpdating ? "Updating..." : "Update"}
-              </Button>
-            )}
+              {isAdmin && (readOnly ? (
+                <Button onClick={() => onOpenChange(false)}>Close</Button>
+              ) : (
+                <Button onClick={onUpdate} disabled={isUpdating}>
+                  {isUpdating ? "Updating..." : "Update"}
+                </Button>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
-    </DialogContent>
-  </Dialog>
-);
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+};
 
 export const FabricModal = ({
   open,
@@ -157,79 +148,60 @@ export const FabricModal = ({
   onUpdate,
   isUpdating,
   readOnly = false,
-}: any) => (
-  <Dialog open={open} onOpenChange={onOpenChange}>
-    <DialogContent>
-      <DialogHeader>
-        <DialogTitle>Fabric Booking Details</DialogTitle>
-      </DialogHeader>
-      {fabric && (
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <strong>Style:</strong> {fabric.style}
-          </div>
-          <div>
-            <strong>Days Between:</strong>{" "}
-            {fabric.bookingDate && fabric.receiveDate
-              ? Math.round(
-                  (new Date(fabric.receiveDate).getTime() -
-                    new Date(fabric.bookingDate).getTime()) /
-                    (1000 * 60 * 60 * 24)
-                )
-              : ""}
-          </div>
-          <div>
-            <strong>Booking Date:</strong>{" "}
-            {fabric.bookingDate ? new Date(fabric.bookingDate).toLocaleDateString() : ""}
-          </div>
-          <div>
-            <strong>Receive Date:</strong>{" "}
-            {fabric.receiveDate ? new Date(fabric.receiveDate).toLocaleDateString() : ""}
-          </div>
-          <div>
-            <label className="block text-sm font-medium">Actual Booking Date</label>
-            <input
-              type="date"
-              className="border rounded px-2 py-1 w-full"
-              value={actualBookingDate}
-              onChange={e => setActualBookingDate(e.target.value)}
-              readOnly={readOnly}
-            />
-            {fabric.actualBookingDate && (
-              <div className="text-xs text-muted-foreground mt-1">
-                Current: {new Date(fabric.actualBookingDate).toLocaleDateString()}
-              </div>
-            )}
-          </div>
-          <div>
-            <label className="block text-sm font-medium">Actual Receive Date</label>
-            <input
-              type="date"
-              className="border rounded px-2 py-1 w-full"
-              value={actualReceiveDate}
-              onChange={e => setActualReceiveDate(e.target.value)}
-              readOnly={readOnly}
-            />
-            {fabric.actualReceiveDate && (
-              <div className="text-xs text-muted-foreground mt-1">
-                Current: {new Date(fabric.actualReceiveDate).toLocaleDateString()}
-              </div>
-            )}
-          </div>
-          <div className="col-span-2 flex justify-end">
-            {readOnly ? (
+}: any) => {
+  const currentUser = useAppSelector(selectCurrentUser);
+  const isAdmin = currentUser?.role === "ADMIN";
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Fabric Booking Details</DialogTitle>
+        </DialogHeader>
+        {fabric && (
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <strong>Receive Date:</strong>{" "}
+              <p>{fabric.receiveDate ? new Date(fabric.receiveDate).toLocaleDateString() : ""}</p>
+            </div>
+            <div>
+              <strong>Target Complete Date:</strong>{" "}
+              {fabric.completeDate ? new Date(fabric.completeDate).toLocaleDateString() : ""}
+            </div>
+            <div>
+              <strong className="">Actual Complete Date</strong>
+              {isAdmin && (
+                <input
+                  type="date"
+                  className="border rounded px-2 py-1 w-full"
+                  value={actualBookingDate}
+                  onChange={e => setActualBookingDate(e.target.value)}
+                  readOnly={readOnly}
+                />
+              )}
+              {fabric.actualCompleteDate && (
+                <div className=" mt-1">
+                   {new Date(fabric.actualCompleteDate).toLocaleDateString()}
+                </div>
+              )}
+            </div>
+            
+            <div className="col-span-2 flex justify-end">
               <Button onClick={() => onOpenChange(false)}>Close</Button>
-            ) : (
-              <Button onClick={onUpdate} disabled={isUpdating}>
-                {isUpdating ? "Updating..." : "Update"}
-              </Button>
-            )}
+              {isAdmin && (readOnly ? (
+                <Button onClick={() => onOpenChange(false)}>Close</Button>
+              ) : (
+                <Button onClick={onUpdate} disabled={isUpdating}>
+                  {isUpdating ? "Updating..." : "Update"}
+                </Button>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
-    </DialogContent>
-  </Dialog>
-);
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+};
 
 export const SampleModal = ({
   open,
@@ -242,82 +214,62 @@ export const SampleModal = ({
   onUpdate,
   isUpdating,
   readOnly = false,
-}: any) => (
-  <Dialog open={open} onOpenChange={onOpenChange}>
-    <DialogContent>
-      <DialogHeader>
-        <DialogTitle>Sample Development Details</DialogTitle>
-      </DialogHeader>
-      {sample && (
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <strong>Style:</strong> {sample.style}
-          </div>
-          <div>
-            <strong>Sampleman Name:</strong> {sample.samplemanName}
-          </div>
-          <div>
-            <strong>Sample Receive Date:</strong>{" "}
-            {sample.sampleReceiveDate ? new Date(sample.sampleReceiveDate).toLocaleDateString() : ""}
-          </div>
-          <div>
-            <strong>Sample Complete Date:</strong>{" "}
-            {sample.sampleCompleteDate ? new Date(sample.sampleCompleteDate).toLocaleDateString() : ""}
-          </div>
-          <div>
-            <strong>Sample Quantity:</strong> {sample.sampleQuantity}
-          </div>
-          <div>
-            <strong>Days Between:</strong>{" "}
-            {sample.sampleReceiveDate && sample.sampleCompleteDate
-              ? Math.round(
-                  (new Date(sample.sampleCompleteDate).getTime() -
-                    new Date(sample.sampleReceiveDate).getTime()) /
-                    (1000 * 60 * 60 * 24)
-                )
-              : ""}
-          </div>
-          <div>
-            <label className="block text-sm font-medium">Actual Sample Receive Date</label>
-            <input
-              type="date"
-              className="border rounded px-2 py-1 w-full"
-              value={actualSampleReceiveDate}
-              onChange={e => setActualSampleReceiveDate(e.target.value)}
-              readOnly={readOnly}
-            />
-            {sample.actualSampleReceiveDate && (
-              <div className="text-xs text-muted-foreground mt-1">
-                Current: {new Date(sample.actualSampleReceiveDate).toLocaleDateString()}
-              </div>
-            )}
-          </div>
-          <div>
-            <label className="block text-sm font-medium">Actual Sample Complete Date</label>
-            <input
-              type="date"
-              className="border rounded px-2 py-1 w-full"
-              value={actualSampleCompleteDate}
-              onChange={e => setActualSampleCompleteDate(e.target.value)}
-              readOnly={readOnly}
-            />
-            {sample.actualSampleCompleteDate && (
-              <div className="text-xs text-muted-foreground mt-1">
-                Current: {new Date(sample.actualSampleCompleteDate).toLocaleDateString()}
-              </div>
-            )}
-          </div>
-          <div className="col-span-2 flex justify-end">
-            {readOnly ? (
+}: any) => {
+  const currentUser = useAppSelector(selectCurrentUser);
+  const isAdmin = currentUser?.role === "ADMIN";
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Sample Development Details</DialogTitle>
+        </DialogHeader>
+        {sample && (
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <strong>Sampleman Name:</strong> {sample.samplemanName}
+            </div>
+            <div>
+              <strong>Sample Receive Date:</strong>{" "}
+              {sample.sampleReceiveDate ? new Date(sample.sampleReceiveDate).toLocaleDateString() : ""}
+            </div>
+            <div>
+              <strong>Sample Complete Date:</strong>{" "}
+              {sample.sampleCompleteDate ? new Date(sample.sampleCompleteDate).toLocaleDateString() : ""}
+            </div>
+            <div>
+              <strong>Sample Quantity:</strong> {sample.sampleQuantity}
+            </div>
+            <div>
+              <label className="block text-sm font-medium">Actual Sample Complete Date</label>
+              {isAdmin && (
+                <input
+                  type="date"
+                  className="border rounded px-2 py-1 w-full"
+                  value={actualSampleCompleteDate}
+                  onChange={e => setActualSampleCompleteDate(e.target.value)}
+                  readOnly={readOnly}
+                />
+              )}
+              {sample.actualSampleCompleteDate && (
+                <div className="text-xs text-muted-foreground mt-1">
+                  Current: {new Date(sample.actualSampleCompleteDate).toLocaleDateString()}
+                </div>
+              )}
+            </div>
+            <div className="col-span-2 flex justify-end">
               <Button onClick={() => onOpenChange(false)}>Close</Button>
-            ) : (
-              <Button onClick={onUpdate} disabled={isUpdating}>
-                {isUpdating ? "Updating..." : "Update"}
-              </Button>
-            )}
+              {isAdmin && (readOnly ? (
+                <Button onClick={() => onOpenChange(false)}>Close</Button>
+              ) : (
+                <Button onClick={onUpdate} disabled={isUpdating}>
+                  {isUpdating ? "Updating..." : "Update"}
+                </Button>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
-    </DialogContent>
-  </Dialog>
-);
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+};
