@@ -161,7 +161,13 @@ export const createTna = async (req, res) => {
       await tx.sampleDevelopment.create({
         data: {
           tna: { connect: { id: tna.id } },
-        }
+        },
+      });
+
+      await tx.dHLTracking.create({
+        data: {
+          tna: { connect: { id: tna.id } },
+        },
       })
 
       return tna;

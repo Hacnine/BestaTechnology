@@ -6,7 +6,7 @@ export const dhlTrackingApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: ulr.BASE_URL }),
   tagTypes: ["DHLTracking"],
   endpoints: (builder) => ({
-    createDHLTracking: builder.mutation({
+    updateDHLTracking: builder.mutation({
       query: (body) => ({
         url: "dhl-tracking/create",
         method: "POST",
@@ -19,5 +19,5 @@ export const dhlTrackingApi = createApi({
 });
 
 export const {
-  useCreateDHLTrackingMutation,
+  useUpdateDHLTrackingMutation,
 } = dhlTrackingApi;

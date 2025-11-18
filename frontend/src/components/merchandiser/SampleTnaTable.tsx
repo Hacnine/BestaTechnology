@@ -14,7 +14,7 @@ import { useUpdateFabricBookingMutation } from "@/redux/api/fabricBooking";
 import { useUpdateSampleDevelopmentMutation } from "@/redux/api/sampleDevelopementApi";
 import { getStatusBadge, getActualCompleteBadge } from "./SampleTnaBadges";
 import { BuyerModal, CadModal, FabricModal, LeadTimeModal, SampleModal } from "./SampleTnaModals";
-import { useCreateDHLTrackingMutation } from "@/redux/api/dHLTrackingApi";
+import { useUpdateDHLTrackingMutation } from "@/redux/api/dHLTrackingApi";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Download, Filter } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -36,7 +36,7 @@ const SampleTnaTable = ({ readOnlyModals = false }: SampleTnaTableProps) => {
   const [updateCadDesign, { isLoading: isUpdating }] = useUpdateCadDesignMutation();
   const [updateFabricBooking, { isLoading: isFabricUpdating }] = useUpdateFabricBookingMutation();
   const [updateSampleDevelopment, { isLoading: isSampleUpdating }] = useUpdateSampleDevelopmentMutation();
-  const [createDHLTracking, { isLoading: isCreatingDHL }] = useCreateDHLTrackingMutation();
+  const [updateDHLTracking, { isLoading: isCreatingDHL }] = useUpdateDHLTrackingMutation();
 
   const [leadTimeModal, setLeadTimeModal] = useState<{
     open: boolean;
@@ -57,7 +57,7 @@ const SampleTnaTable = ({ readOnlyModals = false }: SampleTnaTableProps) => {
     open: false,
     sample: null,
   });
-  const [dhlModal, setDhlModal] = useState<{ open: boolean; style: string | null }>({ open: false, style: null });
+  const [dhlModal, setDhlModal] = useState<{ open: boolean; style: string | null; tnaId: number | null }>({ open: false, style: null, tnaId: null });
 
   const [finalFileReceivedDate, setFinalFileReceivedDate] = useState("");
   const [finalCompleteDate, setFinalCompleteDate] = useState("");
@@ -207,20 +207,20 @@ const SampleTnaTable = ({ readOnlyModals = false }: SampleTnaTableProps) => {
     }));
   };
 
-  // Handler for DHL Tracking create
+  // Handler for DHL Tracking update
   const handleCreateDHLTracking = async () => {
-    if (!dhlModal.style) return;
-    const { trackingNumber, date } = dhlTrackingInputs[dhlModal.style] || {};
+    if (!dhlModal.tnaId) return;
+    const { trackingNumber, date } = dhlTrackingInputs[dhlModal.style || ""] || {};
     if (!trackingNumber || !date) return;
     try {
-      await createDHLTracking({
-        style: dhlModal.style,
+      await updateDHLTracking({
+        tnaId: dhlModal.tnaId,
         trackingNumber,
         date,
         isComplete: true,
       }).unwrap();
       setDhlTrackingInputs((prev) => ({ ...prev, [dhlModal.style!]: { trackingNumber: "", date: "" } }));
-      setDhlModal({ open: false, style: null });
+      setDhlModal({ open: false, style: null, tnaId: null });
     } catch (err) {
       // handle error (toast, etc.)
     }
@@ -438,7 +438,7 @@ const SampleTnaTable = ({ readOnlyModals = false }: SampleTnaTableProps) => {
                     <span className="font-semibold">Date:</span> {row.dhlTracking.date ? new Date(row.dhlTracking.date).toLocaleDateString() : ""}
                   </div> */}
                   <div className=" text-nowrap justify-center flex ">
-                    <span className="font-semibold text-green-700  bg-green-100 rounded px-2 py-0.5"> {row.dhlTracking.isComplete ? "Completed" : "Not Completed"}</span>
+                    <span className="font-semibold text-green-700  bg-green-100 rounded px-2 py-0.5"> {row.dhlTracking.isComplete ? `${row.dhlTracking.trackingNumber}` : "Not Completed"}</span>
                     <p>
                       {/* {row.dhlTracking.date
                         ? new Date(row.dhlTracking.date).toLocaleDateString(undefined, { timeZone: "UTC" })
@@ -452,7 +452,7 @@ const SampleTnaTable = ({ readOnlyModals = false }: SampleTnaTableProps) => {
                     size="sm"
                     className=" bg-green-700 text-white"
                     variant="outline"
-                    onClick={() => setDhlModal({ open: true, style: row.style })}
+                    onClick={() => setDhlModal({ open: true, style: row.style, tnaId: row.id })}
                     disabled={!canAddDHLTracking}
                     title={
                       canAddDHLTracking
@@ -553,7 +553,7 @@ const SampleTnaTable = ({ readOnlyModals = false }: SampleTnaTableProps) => {
           readOnly={readOnlyModals}
         />
         {/* DHL Tracking Modal */}
-        <Dialog open={dhlModal.open} onOpenChange={open => setDhlModal(open ? dhlModal : { open: false, style: null })}>
+        <Dialog open={dhlModal.open} onOpenChange={open => setDhlModal(open ? dhlModal : { open: false, style: null, tnaId: null })}>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Add DHL Tracking</DialogTitle>
