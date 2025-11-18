@@ -80,12 +80,20 @@ const startServerWithRetry = async (retryCount = 0) => {
     app.use(helmet());
     // app.use(compression());
 
-    const allowedOrigins = [
-      "http://localhost:8080", // your dev frontend
-      "http://192.168.0.98:8080", // frontend accessed via LAN IP
-    ];
+    // Allow all origins in development for flexible access
+    const corsOptions = {
+      origin: (origin, callback) => {
+        // Allow requests with no origin (mobile apps, Postman, etc.) or any origin in development
+        if (!origin || process.env.NODE_ENV !== 'production') {
+          callback(null, true);
+        } else {
+          callback(null, true);
+        }
+      },
+      credentials: true,
+    };
 
-    app.use(cors({ origin: true, credentials: true }));
+    app.use(cors(corsOptions));
 
     // Always set CORS headers for /uploads (for all HTTP methods and responses)
     app.use("/uploads", (req, res, next) => {
@@ -132,9 +140,9 @@ const startServerWithRetry = async (retryCount = 0) => {
         resave: false,
         saveUninitialized: false,
         cookie: {
-          secure: process.env.NODE_ENV === "production",
+          secure: false,
           httpOnly: true,
-          sameSite: "none",
+          sameSite: "lax",
           maxAge: 30 * 24 * 60 * 60 * 1000,
         },
         name: "sid",

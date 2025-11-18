@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { checkAdmin } from "../utils/userControllerUtils.js";
+import { getCookieOptions } from "../utils/cookieUtils.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
@@ -409,13 +410,8 @@ console.log(req.body);
       return res.status(403).json({ message: "Account is not active" });
     }
 
-    // Clear old tokens
-    const cookieOptions = {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      path: "/",
-    };
+    // Dynamic cookie options based on environment and origin
+    const cookieOptions = getCookieOptions(req);
     res.clearCookie("access_token", cookieOptions);
     res.clearCookie("refresh_token", cookieOptions);
 
@@ -453,13 +449,8 @@ console.log(req.body);
 
 export const logout = async (req, res) => {
   try {
-    // Clear cookies
-    const cookieOptions = {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      path: "/",
-    };
+    // Dynamic cookie options - must match login settings
+    const cookieOptions = getCookieOptions(req);
     res.clearCookie("access_token", cookieOptions);
     res.clearCookie("refresh_token", cookieOptions);
   
