@@ -419,7 +419,7 @@ const SampleTnaTable = ({ readOnlyModals = false }: SampleTnaTableProps) => {
                     style={{ animationDelay: `${index * 0.05}s` }}
                   >
                     <TableCell>{serial}</TableCell>
-                    <TableCell className="text-nowrap sticky left-0 bg-background z-20">
+                    <TableCell className="text-nowrap sticky left-0 bg-background z-20 uppercase">
                       {row.style || ""}
                     </TableCell>
                     {/* <TableCell>{row.itemName || ""}</TableCell> */}
@@ -438,11 +438,11 @@ const SampleTnaTable = ({ readOnlyModals = false }: SampleTnaTableProps) => {
                         </span>
                       )}
                     </TableCell>
-                    <TableCell>{row.merchandiser || ""}</TableCell>
+                    <TableCell className="capitalize">{row.merchandiser || ""}</TableCell>
                     <TableCell>
                       <Button
                         variant="link"
-                        className=" -ml-4"
+                        className=" -ml-4 capitalize"
                         onClick={() => showBuyerModal(row.buyerName || "")}
                       >
                         {row.buyerName || ""}
