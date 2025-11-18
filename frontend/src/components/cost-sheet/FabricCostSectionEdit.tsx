@@ -92,7 +92,7 @@ const FabricCostSectionEdit = ({ data, onChange, cadData }: FabricCostSectionEdi
       setKnittingRows((prevKnit) => {
         const newKnit = prevKnit.map((r) => ({ ...r }));
         cadItems.forEach((item: any, index: number) => {
-          const valueStr = item?.value != null ? item.value.toString() : "";
+          const valueStr = item?.value != null ? Number(item.value).toFixed(3) : "";
           if (index < newKnit.length) {
             newKnit[index] = {
               ...newKnit[index],
@@ -188,7 +188,7 @@ const FabricCostSectionEdit = ({ data, onChange, cadData }: FabricCostSectionEdi
       : cadData && typeof cadData === "object"
       ? cadData.rows ?? cadData.json ?? []
       : [];
-    const unitValue = cadItemsForAdd && newIndex < cadItemsForAdd.length ? String(cadItemsForAdd[newIndex]?.value ?? "") : "";
+    const unitValue = cadItemsForAdd && newIndex < cadItemsForAdd.length ? (cadItemsForAdd[newIndex]?.value != null ? Number(cadItemsForAdd[newIndex].value).toFixed(3) : "") : "";
     const newRow: FabricRow = {
       id: `${prefix}-${Date.now()}`,
       fieldName: "",
