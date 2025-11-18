@@ -13,18 +13,34 @@ import { useUpdateCadDesignMutation } from "@/redux/api/cadApi";
 import { useUpdateFabricBookingMutation } from "@/redux/api/fabricBooking";
 import { useUpdateSampleDevelopmentMutation } from "@/redux/api/sampleDevelopementApi";
 import { getStatusBadge, getActualCompleteBadge } from "./SampleTnaBadges";
-import { BuyerModal, CadModal, FabricModal, LeadTimeModal, SampleModal } from "./SampleTnaModals";
+import {
+  BuyerModal,
+  CadModal,
+  FabricModal,
+  LeadTimeModal,
+  SampleModal,
+} from "./SampleTnaModals";
 import { useUpdateDHLTrackingMutation } from "@/redux/api/dHLTrackingApi";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Download, Filter } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 import CustomDateInput from "../ui/custom-date-input";
 import url from "@/config/urls";
 import * as XLSX from "xlsx";
 import { exportSampleTnaExcel } from "../../utils/exportSampleTnaExcel";
 import { calculateTnaValues } from "@/utils/tnaCalculations";
-
 
 type SampleTnaTableProps = {
   readOnlyModals?: boolean;
@@ -33,10 +49,14 @@ type SampleTnaTableProps = {
 const SampleTnaTable = ({ readOnlyModals = false }: SampleTnaTableProps) => {
   const [isBuyerModalVisible, setBuyerModalVisible] = useState(false);
   const [buyerInfo, setBuyerInfo] = useState("");
-  const [updateCadDesign, { isLoading: isUpdating }] = useUpdateCadDesignMutation();
-  const [updateFabricBooking, { isLoading: isFabricUpdating }] = useUpdateFabricBookingMutation();
-  const [updateSampleDevelopment, { isLoading: isSampleUpdating }] = useUpdateSampleDevelopmentMutation();
-  const [updateDHLTracking, { isLoading: isCreatingDHL }] = useUpdateDHLTrackingMutation();
+  const [updateCadDesign, { isLoading: isUpdating }] =
+    useUpdateCadDesignMutation();
+  const [updateFabricBooking, { isLoading: isFabricUpdating }] =
+    useUpdateFabricBookingMutation();
+  const [updateSampleDevelopment, { isLoading: isSampleUpdating }] =
+    useUpdateSampleDevelopmentMutation();
+  const [updateDHLTracking, { isLoading: isCreatingDHL }] =
+    useUpdateDHLTrackingMutation();
 
   const [leadTimeModal, setLeadTimeModal] = useState<{
     open: boolean;
@@ -49,15 +69,25 @@ const SampleTnaTable = ({ readOnlyModals = false }: SampleTnaTableProps) => {
     open: false,
     cad: null,
   });
-  const [fabricModal, setFabricModal] = useState<{ open: boolean; fabric: any | null }>({
+  const [fabricModal, setFabricModal] = useState<{
+    open: boolean;
+    fabric: any | null;
+  }>({
     open: false,
     fabric: null,
   });
-  const [sampleModal, setSampleModal] = useState<{ open: boolean; sample: any | null }>({
+  const [sampleModal, setSampleModal] = useState<{
+    open: boolean;
+    sample: any | null;
+  }>({
     open: false,
     sample: null,
   });
-  const [dhlModal, setDhlModal] = useState<{ open: boolean; style: string | null; tnaId: number | null }>({ open: false, style: null, tnaId: null });
+  const [dhlModal, setDhlModal] = useState<{
+    open: boolean;
+    style: string | null;
+    tnaId: number | null;
+  }>({ open: false, style: null, tnaId: null });
 
   const [finalFileReceivedDate, setFinalFileReceivedDate] = useState("");
   const [finalCompleteDate, setFinalCompleteDate] = useState("");
@@ -153,8 +183,12 @@ const SampleTnaTable = ({ readOnlyModals = false }: SampleTnaTableProps) => {
     try {
       await updateCadDesign({
         id: cadModal.cad.id,
-        finalFileReceivedDate: finalFileReceivedDate ? new Date(finalFileReceivedDate).toISOString() : null,
-        finalCompleteDate: finalCompleteDate ? new Date(finalCompleteDate).toISOString() : null,
+        finalFileReceivedDate: finalFileReceivedDate
+          ? new Date(finalFileReceivedDate).toISOString()
+          : null,
+        finalCompleteDate: finalCompleteDate
+          ? new Date(finalCompleteDate).toISOString()
+          : null,
       }).unwrap();
       setCadModal({ open: false, cad: null });
     } catch (err) {
@@ -168,8 +202,12 @@ const SampleTnaTable = ({ readOnlyModals = false }: SampleTnaTableProps) => {
     try {
       await updateFabricBooking({
         id: fabricModal.fabric.id,
-        actualBookingDate: actualBookingDate ? new Date(actualBookingDate).toISOString() : null,
-        actualReceiveDate: actualReceiveDate ? new Date(actualReceiveDate).toISOString() : null,
+        actualBookingDate: actualBookingDate
+          ? new Date(actualBookingDate).toISOString()
+          : null,
+        actualReceiveDate: actualReceiveDate
+          ? new Date(actualReceiveDate).toISOString()
+          : null,
       }).unwrap();
       setFabricModal({ open: false, fabric: null });
     } catch (err) {
@@ -183,8 +221,12 @@ const SampleTnaTable = ({ readOnlyModals = false }: SampleTnaTableProps) => {
     try {
       await updateSampleDevelopment({
         id: sampleModal.sample.id,
-        actualSampleReceiveDate: actualSampleReceiveDate ? new Date(actualSampleReceiveDate).toISOString() : null,
-        actualSampleCompleteDate: actualSampleCompleteDate ? new Date(actualSampleCompleteDate).toISOString() : null,
+        actualSampleReceiveDate: actualSampleReceiveDate
+          ? new Date(actualSampleReceiveDate).toISOString()
+          : null,
+        actualSampleCompleteDate: actualSampleCompleteDate
+          ? new Date(actualSampleCompleteDate).toISOString()
+          : null,
       }).unwrap();
       setSampleModal({ open: false, sample: null });
     } catch (err) {
@@ -193,10 +235,15 @@ const SampleTnaTable = ({ readOnlyModals = false }: SampleTnaTableProps) => {
   };
 
   // Add DHL Tracking input state
-  const [dhlTrackingInputs, setDhlTrackingInputs] = useState<{ [style: string]: { trackingNumber: string; date: string } }>({});
+  const [dhlTrackingInputs, setDhlTrackingInputs] = useState<{
+    [style: string]: { trackingNumber: string; date: string };
+  }>({});
 
   // Handler for DHL Tracking input changes
-  const handleDHLInputChange = (field: "trackingNumber" | "date", value: string) => {
+  const handleDHLInputChange = (
+    field: "trackingNumber" | "date",
+    value: string
+  ) => {
     if (!dhlModal.style) return;
     setDhlTrackingInputs((prev) => ({
       ...prev,
@@ -210,7 +257,8 @@ const SampleTnaTable = ({ readOnlyModals = false }: SampleTnaTableProps) => {
   // Handler for DHL Tracking update
   const handleCreateDHLTracking = async () => {
     if (!dhlModal.tnaId) return;
-    const { trackingNumber, date } = dhlTrackingInputs[dhlModal.style || ""] || {};
+    const { trackingNumber, date } =
+      dhlTrackingInputs[dhlModal.style || ""] || {};
     if (!trackingNumber || !date) return;
     try {
       await updateDHLTracking({
@@ -219,7 +267,10 @@ const SampleTnaTable = ({ readOnlyModals = false }: SampleTnaTableProps) => {
         date,
         isComplete: true,
       }).unwrap();
-      setDhlTrackingInputs((prev) => ({ ...prev, [dhlModal.style!]: { trackingNumber: "", date: "" } }));
+      setDhlTrackingInputs((prev) => ({
+        ...prev,
+        [dhlModal.style!]: { trackingNumber: "", date: "" },
+      }));
       setDhlModal({ open: false, style: null, tnaId: null });
     } catch (err) {
       // handle error (toast, etc.)
@@ -258,7 +309,10 @@ const SampleTnaTable = ({ readOnlyModals = false }: SampleTnaTableProps) => {
             {/* Completed Dropdown (shadcn Select) */}
             <div>
               <label className="block text-xs font-medium mb-1">Status</label>
-              <Select value={completed} onValueChange={(v) => setCompleted(v as "false" | "true") }>
+              <Select
+                value={completed}
+                onValueChange={(v) => setCompleted(v as "false" | "true")}
+              >
                 <SelectTrigger className="w-36">
                   <SelectValue placeholder="Select status" />
                 </SelectTrigger>
@@ -283,196 +337,249 @@ const SampleTnaTable = ({ readOnlyModals = false }: SampleTnaTableProps) => {
             </Button>
           </div>
 
-           <div className="flex items-center justify-end gap-2 ">
-              <Button size="sm" onClick={() => exportSampleTnaExcel(tnaSummary)}>
-                <Download className="h-4 w-4 " />
-                Export All
-              </Button>
-            </div>
+          <div className="flex items-center justify-end gap-2 ">
+            <Button size="sm" onClick={() => exportSampleTnaExcel(tnaSummary)}>
+              <Download className="h-4 w-4 " />
+              Export All
+            </Button>
+          </div>
         </div>
         <Table className="min-w-max w-full">
           <TableHeader className="bg-background z-10">
             <TableRow>
-              <TableHead className="text-nowrap sticky top-0 bg-background z-20">S/N</TableHead>
-              <TableHead className="text-nowrap sticky top-0 bg-background z-20">Item Name</TableHead>
-              <TableHead className="text-nowrap sticky top-0 bg-background z-20">Image</TableHead>
-              <TableHead className="text-nowrap sticky top-0 bg-background z-20">Merchandiser</TableHead>
-              <TableHead className="text-nowrap sticky left-0 top-0 bg-background z-30">Style</TableHead>
-              <TableHead className="sticky top-0 bg-background z-20">Buyer</TableHead>
-              <TableHead className="text-nowrap sticky top-0 bg-background z-20">Sending Date</TableHead>
-              <TableHead className="sticky top-0 bg-background z-20 text-left">Days Left</TableHead>
-              <TableHead className="text-nowrap sticky top-0 bg-background z-20">Sample Type</TableHead>
-              <TableHead className="sticky top-0 bg-background z-20">CAD</TableHead>
-              <TableHead className="sticky top-0 bg-background z-20">Fabric</TableHead>
-              <TableHead className="sticky top-0 bg-background z-20">Sample Swing</TableHead>
-              <TableHead className="sticky top-0 bg-background z-20">DHL Tracking</TableHead>
+              <TableHead className="text-nowrap sticky top-0 bg-background z-20">
+                S/N
+              </TableHead>
+              <TableHead className="text-nowrap sticky left-0 top-0 bg-background z-30">
+                Style
+              </TableHead>
+              {/* <TableHead className="text-nowrap sticky top-0 bg-background z-20">Item Name</TableHead> */}
+              <TableHead className="text-nowrap sticky top-0 bg-background z-20">
+                Image
+              </TableHead>
+              <TableHead className="text-nowrap sticky top-0 bg-background z-20">
+                Merchandiser
+              </TableHead>
+              <TableHead className="sticky top-0 bg-background z-20">
+                Buyer
+              </TableHead>
+              <TableHead className="text-nowrap sticky top-0 bg-background z-20">
+                Sending Date
+              </TableHead>
+              <TableHead className="sticky top-0 bg-background z-20 text-left">
+                Days Left
+              </TableHead>
+              <TableHead className="text-nowrap sticky top-0 bg-background z-20">
+                Sample Type
+              </TableHead>
+              <TableHead className="sticky top-0 bg-background z-20">
+                CAD
+              </TableHead>
+              <TableHead className="sticky top-0 bg-background z-20">
+                Fabric
+              </TableHead>
+              <TableHead className="sticky top-0 bg-background z-20">
+                Sample Swing
+              </TableHead>
+              <TableHead className="sticky top-0 bg-background z-20">
+                DHL Tracking
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {queryLoading ? (
-      <TableRow>
-        <TableCell colSpan={12} className="text-center py-8">
-          <div className="flex flex-col items-center justify-center gap-2">
-            <span className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-400 mb-2"></span>
-            <span className="text-muted-foreground">Loading...</span>
-          </div>
-        </TableCell>
-      </TableRow>
-    ) : (
-      (tnaSummary || []).map((row: any, index: number) => {
-        // Calculate all TNA values using the utility function
-        const {
-          cadRemaining,
-          cadActualBadge,
-          leadTimeRemaining,
-          fabricRemaining,
-          fabricActualBadge,
-          sampleRemaining,
-          sampleActualBadge,
-          canAddDHLTracking,
-        } = calculateTnaValues(row);
+              <TableRow>
+                <TableCell colSpan={12} className="text-center py-8">
+                  <div className="flex flex-col items-center justify-center gap-2">
+                    <span className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-400 mb-2"></span>
+                    <span className="text-muted-foreground">Loading...</span>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : (
+              (tnaSummary || []).map((row: any, index: number) => {
+                // Calculate all TNA values using the utility function
+                const {
+                  cadRemaining,
+                  cadActualBadge,
+                  leadTimeRemaining,
+                  fabricRemaining,
+                  fabricActualBadge,
+                  sampleRemaining,
+                  sampleActualBadge,
+                  canAddDHLTracking,
+                } = calculateTnaValues(row);
 
-        const serial = (page - 1) * pageSize + index + 1;
+                const serial = (page - 1) * pageSize + index + 1;
 
-        return (
-          <TableRow key={row.id} className="animate__animated animate__fadeInUp" style={{ animationDelay: `${index * 0.05}s` }}>
-            <TableCell>{serial}</TableCell>
-            <TableCell>{row.itemName || ""}</TableCell>
-            <TableCell>
-              {row.itemImage ? (
-                <img
-                  src={`${url.BASE_URL}${encodeURI(row.itemImage)}`}
-                  alt={row.style}
-                  className="h-12 w-12 object-cover rounded border"
-                  style={{ maxWidth: 48, maxHeight: 48 }}
-                  loading="lazy"
-                />
-              ) : (
-                <span className="text-xs text-muted-foreground">No image</span>
-              )}
-            </TableCell>
-            <TableCell>{row.merchandiser || ""}</TableCell>
-            <TableCell className="text-nowrap sticky left-0 bg-background z-20">{row.style || ""}</TableCell>
-            <TableCell>
-              <Button
-                variant="link"
-                className=" -ml-4"
-                onClick={() => showBuyerModal(row.buyerName || "")}
-              >
-                {row.buyerName || ""}
-              </Button>
-            </TableCell>
-            <TableCell>
-              {row.sampleSendingDate
-                ? new Date(row.sampleSendingDate).toLocaleDateString(undefined, { timeZone: "UTC" })
-                : ""}
-            </TableCell>
-            <TableCell className="text-left">
-              {leadTimeRemaining !== null
-                ? (
-                    <Button
-                      variant="link"
-                      className="p-0 m-0  justify-start text-left"
-                      onClick={() => setLeadTimeModal({ open: true, row })}
-                    >
-                      {/* If DHL tracking is complete, show blue badge, else normal */}
-                      {row.dhlTracking?.isComplete
-                        ? (
-                          <span className="bg-blue-100 text-blue-700 font-medium px-2 py-0.5 rounded inline-block  text-left">
-                            {leadTimeRemaining > 0
-                              ? `+${leadTimeRemaining} days`
-                              : leadTimeRemaining === 0
-                              ? "0 days"
-                              : `-${Math.abs(leadTimeRemaining)} days`}
-                          </span>
-                        )
-                        : <span className="inline-block  text-left">{getStatusBadge(leadTimeRemaining)}</span>
-                      }
-                    </Button>
-                  )
-                : ""}
-            </TableCell>
-            <TableCell>{row.sampleType || ""}</TableCell>
-            <TableCell>
-              {row.cad ? (
-                <Button
-                  variant="link"
-                  className="-ml-4"
-                  onClick={() => openCadModal(row.cad)}
-                >
-                  {cadActualBadge ? cadActualBadge : getStatusBadge(cadRemaining)}
-                </Button>
-              ) : (
-                ""
-              )}
-            </TableCell>
-            <TableCell>
-              {row.fabricBooking ? (
-                <Button
-                  variant="link"
-                  className="-ml-4"
-                  onClick={() => openFabricModal(row.fabricBooking)}
-                >
-                  {fabricActualBadge ? fabricActualBadge : getStatusBadge(fabricRemaining)}
-                </Button>
-              ) : (
-                ""
-              )}
-            </TableCell>
-            <TableCell>
-              {row.sampleDevelopment ? (
-                <Button
-                  variant="link"
-                  className="-ml-4"
-                  onClick={() => openSampleModal(row.sampleDevelopment)}
-                >
-                  {sampleActualBadge ? sampleActualBadge : getStatusBadge(sampleRemaining)}
-                </Button>
-              ) : (
-                ""
-              )}
-            </TableCell>
-            <TableCell>
-              {row.dhlTracking ? (
-                <div>
-                  {/* <div>
+                return (
+                  <TableRow
+                    key={row.id}
+                    className="animate__animated animate__fadeInUp"
+                    style={{ animationDelay: `${index * 0.05}s` }}
+                  >
+                    <TableCell>{serial}</TableCell>
+                    <TableCell className="text-nowrap sticky left-0 bg-background z-20">
+                      {row.style || ""}
+                    </TableCell>
+                    {/* <TableCell>{row.itemName || ""}</TableCell> */}
+                    <TableCell>
+                      {row.itemImage ? (
+                        <img
+                          src={`${url.BASE_URL}${encodeURI(row.itemImage)}`}
+                          alt={row.style}
+                          className="h-12 w-12 object-cover rounded border"
+                          style={{ maxWidth: 48, maxHeight: 48 }}
+                          loading="lazy"
+                        />
+                      ) : (
+                        <span className="text-xs text-muted-foreground">
+                          No image
+                        </span>
+                      )}
+                    </TableCell>
+                    <TableCell>{row.merchandiser || ""}</TableCell>
+                    <TableCell>
+                      <Button
+                        variant="link"
+                        className=" -ml-4"
+                        onClick={() => showBuyerModal(row.buyerName || "")}
+                      >
+                        {row.buyerName || ""}
+                      </Button>
+                    </TableCell>
+                    <TableCell>
+                      {row.sampleSendingDate
+                        ? new Date(row.sampleSendingDate).toLocaleDateString(
+                            undefined,
+                            { timeZone: "UTC" }
+                          )
+                        : ""}
+                    </TableCell>
+                    <TableCell className="text-left">
+                      {leadTimeRemaining !== null ? (
+                        <Button
+                          variant="link"
+                          className="p-0 m-0  justify-start text-left"
+                          onClick={() => setLeadTimeModal({ open: true, row })}
+                        >
+                          {/* If DHL tracking is complete, show blue badge, else normal */}
+                          {row.dhlTracking?.isComplete ? (
+                            <span className="bg-blue-100 text-blue-700 font-medium px-2 py-0.5 rounded inline-block  text-left">
+                              {leadTimeRemaining > 0
+                                ? `+${leadTimeRemaining} days`
+                                : leadTimeRemaining === 0
+                                ? "0 days"
+                                : `-${Math.abs(leadTimeRemaining)} days`}
+                            </span>
+                          ) : (
+                            <span className="inline-block  text-left">
+                              {getStatusBadge(leadTimeRemaining)}
+                            </span>
+                          )}
+                        </Button>
+                      ) : (
+                        ""
+                      )}
+                    </TableCell>
+                    <TableCell>{row.sampleType || ""}</TableCell>
+                    <TableCell>
+                      {row.cad ? (
+                        <Button
+                          variant="link"
+                          className="-ml-4"
+                          onClick={() => openCadModal(row.cad)}
+                        >
+                          {cadActualBadge
+                            ? cadActualBadge
+                            : getStatusBadge(cadRemaining)}
+                        </Button>
+                      ) : (
+                        ""
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      {row.fabricBooking ? (
+                        <Button
+                          variant="link"
+                          className="-ml-4"
+                          onClick={() => openFabricModal(row.fabricBooking)}
+                        >
+                          {fabricActualBadge
+                            ? fabricActualBadge
+                            : getStatusBadge(fabricRemaining)}
+                        </Button>
+                      ) : (
+                        ""
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      {row.sampleDevelopment ? (
+                        <Button
+                          variant="link"
+                          className="-ml-4"
+                          onClick={() => openSampleModal(row.sampleDevelopment)}
+                        >
+                          {sampleActualBadge
+                            ? sampleActualBadge
+                            : getStatusBadge(sampleRemaining)}
+                        </Button>
+                      ) : (
+                        ""
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      {row.dhlTracking ? (
+                        <div>
+                          {/* <div>
                     <span className="font-semibold">No:</span> {row.dhlTracking.trackingNumber}
                   </div>
                   <div>
                     <span className="font-semibold">Date:</span> {row.dhlTracking.date ? new Date(row.dhlTracking.date).toLocaleDateString() : ""}
                   </div> */}
-                  <div className=" text-nowrap justify-center flex ">
-                    <span className="font-semibold text-green-700  bg-green-100 rounded px-2 py-0.5"> {row.dhlTracking.isComplete ? `${row.dhlTracking.trackingNumber}` : "Not Completed"}</span>
-                    <p>
-                      {/* {row.dhlTracking.date
+                          <div className=" text-nowrap justify-center flex ">
+                            <span className="font-semibold text-green-700  bg-green-100 rounded px-2 py-0.5">
+                              {" "}
+                              {row.dhlTracking.isComplete
+                                ? `${row.dhlTracking.trackingNumber}`
+                                : "Not Completed"}
+                            </span>
+                            <p>
+                              {/* {row.dhlTracking.date
                         ? new Date(row.dhlTracking.date).toLocaleDateString(undefined, { timeZone: "UTC" })
                         : ""} */}
-                    </p>
-                  </div>
-                </div>
-              ) : (
-                !readOnlyModals && (
-                  <Button
-                    size="sm"
-                    className=" bg-green-700 text-white"
-                    variant="outline"
-                    onClick={() => setDhlModal({ open: true, style: row.style, tnaId: row.id })}
-                    disabled={!canAddDHLTracking}
-                    title={
-                      canAddDHLTracking
-                        ? "Add DHL Tracking"
-                        : "Complete CAD, Fabric, and Sample first"
-                    }
-                  >
-                    Add DHL Tracking
-                  </Button>
-                )
-              )}
-            </TableCell>
-          </TableRow>
-        );
-      })
-    )}
+                            </p>
+                          </div>
+                        </div>
+                      ) : (
+                        !readOnlyModals && (
+                          <Button
+                            size="sm"
+                            className=" bg-green-700 text-white"
+                            variant="outline"
+                            onClick={() =>
+                              setDhlModal({
+                                open: true,
+                                style: row.style,
+                                tnaId: row.id,
+                              })
+                            }
+                            disabled={!canAddDHLTracking}
+                            title={
+                              canAddDHLTracking
+                                ? "Add DHL Tracking"
+                                : "Complete CAD, Fabric, and Sample first"
+                            }
+                          >
+                            Add DHL Tracking
+                          </Button>
+                        )
+                      )}
+                    </TableCell>
+                  </TableRow>
+                );
+              })
+            )}
           </TableBody>
         </Table>
         {/* Pagination Controls */}
@@ -557,7 +664,14 @@ const SampleTnaTable = ({ readOnlyModals = false }: SampleTnaTableProps) => {
           readOnly={readOnlyModals}
         />
         {/* DHL Tracking Modal */}
-        <Dialog open={dhlModal.open} onOpenChange={open => setDhlModal(open ? dhlModal : { open: false, style: null, tnaId: null })}>
+        <Dialog
+          open={dhlModal.open}
+          onOpenChange={(open) =>
+            setDhlModal(
+              open ? dhlModal : { open: false, style: null, tnaId: null }
+            )
+          }
+        >
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Add DHL Tracking</DialogTitle>
@@ -566,13 +680,17 @@ const SampleTnaTable = ({ readOnlyModals = false }: SampleTnaTableProps) => {
               <Input
                 type="text"
                 placeholder="Tracking Number"
-                value={dhlTrackingInputs[dhlModal.style || ""]?.trackingNumber || ""}
-                onChange={e => handleDHLInputChange("trackingNumber", e.target.value)}
+                value={
+                  dhlTrackingInputs[dhlModal.style || ""]?.trackingNumber || ""
+                }
+                onChange={(e) =>
+                  handleDHLInputChange("trackingNumber", e.target.value)
+                }
               />
               <CustomDateInput
                 label=""
                 value={dhlTrackingInputs[dhlModal.style || ""]?.date || ""}
-                onChange={e => handleDHLInputChange("date", e.target.value)}
+                onChange={(e) => handleDHLInputChange("date", e.target.value)}
               />
               <Button
                 size="sm"
