@@ -412,6 +412,7 @@ export async function getTNASummary(req, res) {
           where: { tna: { is: { style: tna.style } } },
           select: {
             id: true,
+            createdBy: { select: { userName: true } },
             tnaId: true,
             receiveDate: true,
             completeDate: true,
