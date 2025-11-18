@@ -34,7 +34,11 @@ export const LeadTimeModal = ({ open, onOpenChange, row }: any) => (
             {row.sampleSendingDate ? new Date(row.sampleSendingDate).toLocaleDateString() : ""}
           </div>
           <div>
-            <strong>Lead Time:</strong>{" "}
+            <strong>Complete Date:</strong>{" "} 
+            {row.dhlTracking.date ? new Date(row.dhlTracking.date).toLocaleDateString() : ""}
+          </div>
+          <div>
+            <strong>Calculated Lead Time:</strong>{" "}
             {row.sampleSendingDate && row.orderDate
               ? Math.round(
                   (new Date(row.sampleSendingDate).getTime() -
