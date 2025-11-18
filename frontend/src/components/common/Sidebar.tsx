@@ -73,7 +73,7 @@ const navigationItemsMap: Record<string, any[]> = {
     },
     {
       title: "Reports",
-      href: `${APP_ROUTES.reports}`,
+      href: `${APP_ROUTES.merchandiser_reports}`,
       icon: ClipboardList,
     },
     { title: "Cost Sheet", href: `${APP_ROUTES.cost_sheet}`, icon: Receipt },

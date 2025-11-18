@@ -450,6 +450,7 @@ const SampleTnaTable = ({ readOnlyModals = false }: SampleTnaTableProps) => {
                 !readOnlyModals && (
                   <Button
                     size="sm"
+                    className=" bg-green-700 text-white"
                     variant="outline"
                     onClick={() => setDhlModal({ open: true, style: row.style })}
                     disabled={!canAddDHLTracking}
@@ -558,16 +559,14 @@ const SampleTnaTable = ({ readOnlyModals = false }: SampleTnaTableProps) => {
               <DialogTitle>Add DHL Tracking</DialogTitle>
             </DialogHeader>
             <div className="flex flex-col gap-2">
-              <input
+              <Input
                 type="text"
                 placeholder="Tracking Number"
-                className="border rounded px-2 py-1"
                 value={dhlTrackingInputs[dhlModal.style || ""]?.trackingNumber || ""}
                 onChange={e => handleDHLInputChange("trackingNumber", e.target.value)}
               />
-              <input
-                type="date"
-                className="border rounded px-2 py-1"
+              <CustomDateInput
+                label=""
                 value={dhlTrackingInputs[dhlModal.style || ""]?.date || ""}
                 onChange={e => handleDHLInputChange("date", e.target.value)}
               />

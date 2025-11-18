@@ -19,7 +19,7 @@ import SampleDevelopement from "@/components/SampleRoomDashboard/SampleRoomDashb
 import FabricBooking from "@/components/fabricBooking/FabricBookingDashboard";
 import { MerchandiserDashboard } from "@/components/merchandiser/MerchandiserDashboard";
 import SampleTna from "@/components/merchandiser/SampleTna";
-import Reports from "@/components/merchandiser/Reports";
+import MerchandiserReports from "@/components/merchandiser/Reports";
 import ManagementDashboard from "@/components/merchandiser/ManagementDashboard";
 import ManagementTrimsPage from "@/components/trims/ManagementTrimsPage";
 import TrimsCreatePage from "@/components/trims/TrimsCreatePage";
@@ -69,7 +69,7 @@ export const router = createBrowserRouter(
           <Route path="user" element={<UserManagement />} />
           <Route path="buyer" element={<BuyerManagement />} />
           <Route path="audit" element={<AuditLogs />} />
-          <Route path="reports" element={<Reports />} />
+          <Route path="reports" element={<MerchandiserReports />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Route>
@@ -97,7 +97,7 @@ export const router = createBrowserRouter(
         {/* <Route path="cad-designs" element={<CadDesignDashboard /   >} /> */}
         <Route path="fabric-booking" element={<FabricBooking />} />
         <Route path="sample-development" element={<SampleDevelopement />} />
-        <Route path="reports" element={<Reports />} />
+        <Route path="reports" element={<MerchandiserReports />} />
         <Route path="cost-sheet" element={<CostSheet />} />
         
       </Route>

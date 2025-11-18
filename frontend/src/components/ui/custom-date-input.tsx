@@ -40,14 +40,14 @@ const CustomDateInput = forwardRef<HTMLInputElement, CustomDateInputProps>(
           onClick={() => setOpen(true)}
         />
         {!value && (
-          <span className="absolute left-3 top-8 text-gray-400 cursor-pointer text-sm" onClick={() => setOpen(true)}>
+          <span className={`absolute left-3 ${label ? 'top-8' : 'top-3'} text-gray-400 cursor-pointer text-sm`} onClick={() => setOpen(true)}>
             {placeholder}
           </span>
         )}
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Calendar
-              className="absolute right-3 top-8 h-4 w-4 text-gray-400 cursor-pointer"
+              className={`absolute right-3 ${label ? 'top-8' : 'top-3'} h-4 w-4 text-gray-400 cursor-pointer`}
             />
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0" align="start">

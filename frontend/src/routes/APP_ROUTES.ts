@@ -23,7 +23,7 @@ export const APP_ROUTES = {
   cad: "/cad/dashboard",
   sample_fabric: "/sample-fabric/dashboard",
   sample_room: "/merchandiser/sample-development",
-  reports: "/merchandiser/reports",
+  merchandiser_reports: "/merchandiser/reports",
   cost_sheet: "/merchandiser/cost-sheet",
 
   management_dashboard: "/management/dashboard",
