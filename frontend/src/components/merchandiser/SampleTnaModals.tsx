@@ -45,21 +45,6 @@ export const LeadTimeModal = ({ open, onOpenChange, row }: any) => (
             days
           </div>
           <div>
-            <strong>
-              {row.sampleSendingDate
-                ? (() => {
-                    const today = new Date();
-                    const sampleSendDate = new Date(row.sampleSendingDate);
-                    const remaining = Math.round(
-                      (sampleSendDate.getTime() - today.setHours(0, 0, 0, 0)) /
-                        (1000 * 60 * 60 * 24)
-                    );
-                    return remaining >= 0
-                      ? `${remaining} days remaining`
-                      : `${Math.abs(remaining)} days overdue`;
-                  })()
-                : ""}
-            </strong>
           </div>
         </div>
       )}
@@ -120,7 +105,7 @@ export const CadModal = ({
                 </span>
               )}
             </div>
-            <div className="col-span-2 flex justify-end">
+            <div className="col-span-full flex justify-end">
               <Button onClick={() => onOpenChange(false)}>Close</Button>
               {isAdmin && (readOnly ? (
                 <Button onClick={() => onOpenChange(false)}>Close</Button>
@@ -161,6 +146,10 @@ export const FabricModal = ({
         {fabric && (
           <div className="grid grid-cols-2 gap-4">
             <div>
+              <strong>Receiver Store:</strong>{" "}
+              <p>{fabric.createdBy ? fabric.createdBy.userName : ""}</p>
+            </div>
+            <div>
               <strong>Receive Date:</strong>{" "}
               <p>{fabric.receiveDate ? new Date(fabric.receiveDate).toLocaleDateString() : ""}</p>
             </div>
@@ -186,7 +175,7 @@ export const FabricModal = ({
               )}
             </div>
             
-            <div className="col-span-2 flex justify-end">
+            <div className="w-full flex justify-end">
               <Button onClick={() => onOpenChange(false)}>Close</Button>
               {isAdmin && (readOnly ? (
                 <Button onClick={() => onOpenChange(false)}>Close</Button>
