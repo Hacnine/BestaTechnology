@@ -47,7 +47,8 @@ const SearchHeader: React.FC<{
   scope: "all" | "own";
   setScope: (v: "all" | "own") => void;
   setPage?: (v: number) => void;
-}> = ({ search, setSearch, isLoading, error, scope, setScope, setPage }) => (
+  isAdmin?: boolean;
+}> = ({ search, setSearch, isLoading, error, scope, setScope, setPage, isAdmin }) => (
   <div className="flex items-center mb-4 w-full">
     <div className="flex flex-col gap-2 w-full">
       <div className="flex items-center gap-4">
@@ -73,6 +74,7 @@ const SearchHeader: React.FC<{
                 variant="outline"
                 size="sm"
                 className="hidden py-5 md:inline-flex"
+                disabled={isAdmin}
               >
                 <ChevronDown className="w-4 h-4 mr-2" />
                 {scope === "all" ? "All Cost Sheets" : "Own Cost Sheets"}
@@ -203,13 +205,16 @@ const ActionButtons: React.FC<{
 };
 
 const CostSheetTable = ({ onCopy }: CostSheetTableProps) => {
+  const { user } = useUser();
   // Pagination state
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [editModalId, setEditModalId] = useState<number | null>(null);
   const [page, setPage] = useState(1);
   const limit = 10;
   const [search, setSearch] = useState("");
-  const [scope, setScope] = useState<"all" | "own">("own");
+  const [scope, setScope] = useState<"all" | "own">(
+    user?.role === "ADMIN" ? "all" : "own"
+  );
   // API call with pagination
   // include `scope` explicitly so the query args change when scope changes
   const { data, isLoading, error } = useGetCostSheetsQuery(
@@ -236,6 +241,14 @@ const CostSheetTable = ({ onCopy }: CostSheetTableProps) => {
 
   const totalPages = (data && (data as any).totalPages) || 1;
   const hasNextPage = (data && (data as any).hasNextPage) || false;
+
+  // If user is admin, ensure scope stays 'all' and reset to first page
+  React.useEffect(() => {
+    if (user?.role === "ADMIN") {
+      setScope("all");
+      setPage(1);
+    }
+  }, [user?.role]);
 
   const {
     data: singleSheetData,
@@ -282,8 +295,7 @@ const CostSheetTable = ({ onCopy }: CostSheetTableProps) => {
   const [editedOthersRows, setEditedOthersRows] = useState<any>(null);
   const [editedSummaryRows, setEditedSummaryRows] = useState<any>(null);
   const currentSheet = (singleSheetData as any) ?? null;
-  const userState = useUser();
-  const currentUser = userState?.user || null;
+  const currentUser = user || null;
   const isEditMode = expandedId !== null && editModalId === expandedId;
 
   React.useEffect(() => {
@@ -392,6 +404,7 @@ const CostSheetTable = ({ onCopy }: CostSheetTableProps) => {
           scope={scope}
           setScope={setScope}
           setPage={setPage}
+          isAdmin={user?.role === "ADMIN"}
         />
         <div className="text-center text-destructive py-8">
           Failed to load cost sheets. Please try again.
@@ -411,6 +424,7 @@ const CostSheetTable = ({ onCopy }: CostSheetTableProps) => {
           scope={scope}
           setScope={setScope}
           setPage={setPage}
+          isAdmin={user?.role === "ADMIN"}
         />
         <div className="text-center text-muted-foreground py-8">
           No cost sheets found.
@@ -431,6 +445,7 @@ const CostSheetTable = ({ onCopy }: CostSheetTableProps) => {
           scope={scope}
           setScope={setScope}
           setPage={setPage}
+          isAdmin={user?.role === "ADMIN"}
         />
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
@@ -439,6 +454,7 @@ const CostSheetTable = ({ onCopy }: CostSheetTableProps) => {
                 <th className="text-left p-2">S/N</th>
                 <th className="text-left p-2">Image</th>
                 <th className="text-left p-2">Style</th>
+                <th className="text-left p-2">Merchandiser</th>
                 <th className="text-left p-2">Item</th>
                 <th className="text-left p-2">Group</th>
                 {/* <th className="text-left p-2">Size</th> */}
@@ -446,7 +462,6 @@ const CostSheetTable = ({ onCopy }: CostSheetTableProps) => {
                 <th className="text-left p-2">GSM</th>
                 {/* <th className="text-left p-2">Color</th> */}
                 <th className="text-left p-2">Quantity</th>
-                <th className="text-left p-2">Merchandiser</th>
                 <th className="text-left p-2">Created At</th>
                 <th className="text-left p-2">Price Per Piece</th>
                 <th className="text-left p-2">Actions</th>
@@ -471,6 +486,9 @@ const CostSheetTable = ({ onCopy }: CostSheetTableProps) => {
                     <td className="p-2 uppercase text-xs">
                       {sheet.style?.name || "-"}
                     </td>
+                    <td className="p-2 text-sm capitalize">
+                      {sheet.name || "-"}
+                    </td>
                     <td className="p-2 text-sm">{sheet.item || "-"}</td>
                     <td className="p-2 text-sm">{sheet.group || "-"}</td>
                     {/* <td className="p-2 text-sm">{sheet.size || "-"}</td> */}
@@ -478,9 +496,6 @@ const CostSheetTable = ({ onCopy }: CostSheetTableProps) => {
                     <td className="p-2 text-sm">{sheet.gsm || "-"}</td>
                     {/* <td className="p-2 text-sm">{sheet.color || "-"}</td> */}
                     <td className="p-2 text-sm">{sheet.quantity ?? "-"}</td>
-                    <td className="p-2 text-sm capitalize">
-                      {sheet.name || "-"}
-                    </td>
                     <td className="p-2 text-sm">
                       {sheet.createdAt
                         ? new Date(sheet.createdAt).toLocaleDateString()
