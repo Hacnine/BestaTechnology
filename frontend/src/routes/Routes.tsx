@@ -70,7 +70,15 @@ export const router = createBrowserRouter(
           <Route path="buyer" element={<BuyerManagement />} />
           <Route path="audit" element={<AuditLogs />} />
           <Route path="reports" element={<MerchandiserReports />} />
+          <Route path="cost-sheet" element={<CostSheet />} />
           <Route path="*" element={<NotFound />} />
+        </Route>
+      </Route>
+
+      {/* Admin-only top-level cost-sheet route (accessible at /cost-sheet) */}
+      <Route element={<AdminRoutes />}>
+        <Route path="cost-sheet" element={<Layout sidebarFor={"admin"} />}>
+          <Route index element={<CostSheet />} />
         </Route>
       </Route>
 

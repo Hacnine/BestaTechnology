@@ -59,6 +59,11 @@ const navigationItemsMap: Record<string, any[]> = {
       href: `${APP_ROUTES.admin_reports}`,
       icon: FileText,
     },
+    {
+      title: "Cost Sheet",
+      href: `${APP_ROUTES.admin_cost_sheet}`,
+      icon: Receipt,
+    },
   ],
   MERCHANDISER: [
     {

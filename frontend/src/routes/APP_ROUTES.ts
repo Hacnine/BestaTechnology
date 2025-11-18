@@ -8,6 +8,7 @@ export const APP_ROUTES = {
   admin_tna: "/admin/tna",
   admin_audit: "/admin/audit",
   admin_reports: "/admin/reports",
+  admin_cost_sheet: "/admin/cost-sheet",
   admin_info: "/settings/company",
   admin_settings: "/admin/settings",
   admin_notifications: "/settings/notifications",

@@ -293,6 +293,7 @@ const SampleTnaTable = ({ readOnlyModals = false }: SampleTnaTableProps) => {
         <Table className="min-w-max w-full">
           <TableHeader className="bg-background z-10">
             <TableRow>
+              <TableHead className="text-nowrap sticky top-0 bg-background z-20">S/N</TableHead>
               <TableHead className="text-nowrap sticky top-0 bg-background z-20">Item Name</TableHead>
               <TableHead className="text-nowrap sticky top-0 bg-background z-20">Image</TableHead>
               <TableHead className="text-nowrap sticky top-0 bg-background z-20">Merchandiser</TableHead>
@@ -331,8 +332,11 @@ const SampleTnaTable = ({ readOnlyModals = false }: SampleTnaTableProps) => {
           canAddDHLTracking,
         } = calculateTnaValues(row);
 
+        const serial = (page - 1) * pageSize + index + 1;
+
         return (
           <TableRow key={row.id} className="animate__animated animate__fadeInUp" style={{ animationDelay: `${index * 0.05}s` }}>
+            <TableCell>{serial}</TableCell>
             <TableCell>{row.itemName || ""}</TableCell>
             <TableCell>
               {row.itemImage ? (
