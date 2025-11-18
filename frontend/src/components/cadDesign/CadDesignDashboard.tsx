@@ -292,6 +292,7 @@ const CadDesignDashboard = () => {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead>S/N</TableHead>
                 <TableHead>Style</TableHead>
                 <TableHead>Item Image</TableHead>
                 <TableHead>Merchandiser</TableHead>
@@ -347,6 +348,7 @@ const CadDesignDashboard = () => {
                   });
                   return (
                   <TableRow key={row.id} className="animate__animated animate__fadeInUp" style={{ animationDelay: `${index * 0.05}s` }}>
+                    <TableCell className="font-medium">{(cadApprovals?.page || page - 0 - 0) ? ( ( (cadApprovals?.page || page) - 1) * pageSize + index + 1) : index + 1}</TableCell>
                     <TableCell className="uppercase">{row.tna?.style}</TableCell>
                     <TableCell>
                       {row.tna?.itemImage ? (
