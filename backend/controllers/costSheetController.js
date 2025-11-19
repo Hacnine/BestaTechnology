@@ -17,6 +17,7 @@ export const getAllCostSheets = async (req, res) => {
         OR: [
           { item: { contains: search } },
           { style: { name: { contains: search } } },
+          { name: { contains: search } },
         ],
       };
     }

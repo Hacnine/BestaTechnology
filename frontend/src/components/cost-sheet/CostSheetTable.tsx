@@ -58,7 +58,7 @@ const SearchHeader: React.FC<{
           <Input
             type="text"
             className="md:w-[300px] placeholder:text-sm pl-8 border rounded-md"
-            placeholder="Search By Style "
+            placeholder="Search By Item Style Merchandiser"
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);
