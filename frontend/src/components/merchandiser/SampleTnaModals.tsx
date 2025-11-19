@@ -109,15 +109,13 @@ export const CadModal = ({
                 </span>
               )}
             </div>
-            <div className="col-span-full flex justify-end">
+            <div className="col-span-full border-t pt-4 mt-4 flex justify-end gap-2">
               <Button onClick={() => onOpenChange(false)}>Close</Button>
-              {isAdmin && (readOnly ? (
-                <Button onClick={() => onOpenChange(false)}>Close</Button>
-              ) : (
+              {isAdmin && !readOnly && (
                 <Button onClick={onUpdate} disabled={isUpdating}>
                   {isUpdating ? "Updating..." : "Update"}
                 </Button>
-              ))}
+              )}
             </div>
           </div>
         )}
@@ -179,15 +177,13 @@ export const FabricModal = ({
               )}
             </div>
             
-            <div className="w-full flex justify-end">
+            <div className="col-span-full border-t pt-4 mt-4 flex justify-end gap-2">
               <Button onClick={() => onOpenChange(false)}>Close</Button>
-              {isAdmin && (readOnly ? (
-                <Button onClick={() => onOpenChange(false)}>Close</Button>
-              ) : (
+              {isAdmin && !readOnly && (
                 <Button onClick={onUpdate} disabled={isUpdating}>
                   {isUpdating ? "Updating..." : "Update"}
                 </Button>
-              ))}
+              )}
             </div>
           </div>
         )}
@@ -234,7 +230,7 @@ export const SampleModal = ({
               <strong>Sample Quantity:</strong> {sample.sampleQuantity}
             </div>
             <div>
-              <label className="block text-sm font-medium">Actual Sample Complete Date</label>
+              <label className="font-bold">Actual Sample Complete Date</label>
               {isAdmin && (
                 <input
                   type="date"
@@ -245,20 +241,18 @@ export const SampleModal = ({
                 />
               )}
               {sample.actualSampleCompleteDate && (
-                <div className="text-xs text-muted-foreground mt-1">
-                  Current: {new Date(sample.actualSampleCompleteDate).toLocaleDateString()}
+                <div className=" mt-1">
+                   {new Date(sample.actualSampleCompleteDate).toLocaleDateString()}
                 </div>
               )}
             </div>
-            <div className="col-span-2 flex justify-end">
+            <div className="col-span-full border-t pt-4 mt-4 flex justify-end gap-2">
               <Button onClick={() => onOpenChange(false)}>Close</Button>
-              {isAdmin && (readOnly ? (
-                <Button onClick={() => onOpenChange(false)}>Close</Button>
-              ) : (
+              {isAdmin && !readOnly && (
                 <Button onClick={onUpdate} disabled={isUpdating}>
                   {isUpdating ? "Updating..." : "Update"}
                 </Button>
-              ))}
+              )}
             </div>
           </div>
         )}
