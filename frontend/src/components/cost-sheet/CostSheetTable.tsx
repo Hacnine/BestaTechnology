@@ -23,6 +23,7 @@ import {
   Trash,
   Search,
   ChevronDown,
+  ImageOff,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -480,7 +481,7 @@ const CostSheetTable = ({ onCopy }: CostSheetTableProps) => {
                           className="w-16 h-16 object-cover"
                         />
                       ) : (
-                        "-"
+                        <ImageOff className="text-gray-600" />
                       )}
                     </td>
                     <td className="p-2 uppercase text-xs">
