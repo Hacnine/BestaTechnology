@@ -71,6 +71,72 @@ services:
     depends_on:
       - backend
 
+  backup:
+    build:
+      context: ./scripts
+      dockerfile: Dockerfile.backup
+    container_name: besta-backup
+    restart: "no"  # For manual/one-time backups
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: bestauser
+      DB_PASSWORD: bestapass
+      DB_NAME: besta
+      DUMP_DIR: /app/backups
+      # GCS Configuration (set these to enable cloud upload)
+      UPLOAD_TO_GCS: "false"  # Set to "true" to enable GCS upload
+      GCS_BUCKET: ""  # e.g., "my-backup-bucket"
+      GCS_PREFIX: "besta/"  # folder path in bucket
+      KEEP_LOCAL_BACKUP: "true"  # Keep local copy after upload
+      LOCAL_RETENTION_DAYS: "7"  # Delete local backups older than N days
+      # GOOGLE_APPLICATION_CREDENTIALS should point to service account key
+      # Mount the key file as a volume (see below)
+    volumes:
+      - ./backups:/app/backups  # Local backup storage
+      # Uncomment and set path to your GCS service account key:
+      # - ./gcs-service-account-key.json:/app/gcs-key.json:ro
+    # Uncomment this if you mount the key file:
+    # environment:
+    #   GOOGLE_APPLICATION_CREDENTIALS: /app/gcs-key.json
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - default
+
+  backup-scheduler:
+    build:
+      context: ./scripts
+      dockerfile: Dockerfile.backup-cron
+    container_name: besta-backup-scheduler
+    restart: always  # Always running to schedule backups
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: bestauser
+      DB_PASSWORD: bestapass
+      DB_NAME: besta
+      DUMP_DIR: /app/backups
+      # GCS Configuration (set these to enable cloud upload)
+      UPLOAD_TO_GCS: "false"  # Set to "true" to enable GCS upload
+      GCS_BUCKET: ""  # e.g., "my-backup-bucket"
+      GCS_PREFIX: "besta/"  # folder path in bucket
+      KEEP_LOCAL_BACKUP: "true"  # Keep local copy after upload
+      LOCAL_RETENTION_DAYS: "7"  # Delete local backups older than N days
+    volumes:
+      - ./backups:/app/backups  # Local backup storage
+      # Uncomment and set path to your GCS service account key:
+      # - ./gcs-service-account-key.json:/app/gcs-key.json:ro
+    # Uncomment this if you mount the key file:
+    # environment:
+    #   GOOGLE_APPLICATION_CREDENTIALS: /app/gcs-key.json
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - default
+
 volumes:
   # mongo_data:
   redis_data:

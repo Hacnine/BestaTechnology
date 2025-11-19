@@ -1,0 +1,15 @@
+{
+  "name": "besta-backup-scripts",
+  "version": "1.0.0",
+  "description": "Database backup scripts with GCS upload",
+  "main": "dump-db.js",
+  "scripts": {
+    "backup": "node dump-db.js"
+  },
+  "dependencies": {
+    "mysqldump": "^3.2.0",
+    "@google-cloud/storage": "^7.14.0"
+  },
+  "author": "",
+  "license": "ISC"
+}

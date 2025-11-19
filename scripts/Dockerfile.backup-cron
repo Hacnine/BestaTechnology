@@ -1,0 +1,35 @@
+FROM node:18-slim
+
+# Install cron, mysql-client, and other dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    default-mysql-client \
+    curl \
+    gnupg \
+    cron \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copy package files and install dependencies
+COPY package*.json ./
+RUN npm install --only=production
+
+# Copy scripts
+COPY dump-db.js ./
+
+# Create backup directory
+RUN mkdir -p /app/backups
+
+# Create cron job file - runs twice daily at 11 AM and 5 PM
+RUN echo "0 11 * * * cd /app && node dump-db.js >> /app/backups/backup.log 2>&1" > /etc/cron.d/backup-cron && \
+    echo "0 17 * * * cd /app && node dump-db.js >> /app/backups/backup.log 2>&1" >> /etc/cron.d/backup-cron && \
+    echo "" >> /etc/cron.d/backup-cron && \
+    chmod 0644 /etc/cron.d/backup-cron && \
+    crontab /etc/cron.d/backup-cron
+
+# Create log file
+RUN touch /app/backups/backup.log
+
+# Start cron in foreground
+CMD ["cron", "-f"]

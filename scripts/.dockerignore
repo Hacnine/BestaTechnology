@@ -1,0 +1,10 @@
+node_modules
+npm-debug.log
+*.log
+.git
+.gitignore
+README.md
+BACKUP_README.md
+*.sh
+*.ps1
+gcs-lifecycle.json
