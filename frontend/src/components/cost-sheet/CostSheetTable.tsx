@@ -452,20 +452,20 @@ const CostSheetTable = ({ onCopy }: CostSheetTableProps) => {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b bg-muted/30">
-                <th className="text-left p-2">S/N</th>
-                <th className="text-left p-2">Image</th>
-                <th className="text-left p-2">Style</th>
-                <th className="text-left p-2">Merchandiser</th>
-                <th className="text-left p-2">Item</th>
-                <th className="text-left p-2">Group</th>
+                <th className="text-left p-2 bg-background text-gray-400">S/N</th>
+                <th className="text-left p-2 bg-background text-gray-400">Image</th>
+                <th className="text-left p-2 bg-background text-gray-400">Style</th>
+                <th className="text-left p-2 bg-background text-gray-400">Merchandiser</th>
+                <th className="text-left p-2 bg-background text-gray-400">Item</th>
+                <th className="text-left p-2 bg-background text-gray-400">Group</th>
                 {/* <th className="text-left p-2">Size</th> */}
-                <th className="text-left p-2">Fabric Type</th>
-                <th className="text-left p-2">GSM</th>
+                <th className="text-left p-2 bg-background text-gray-400">Fabric Type</th>
+                <th className="text-left p-2 bg-background text-gray-400">GSM</th>
                 {/* <th className="text-left p-2">Color</th> */}
-                <th className="text-left p-2">Quantity</th>
-                <th className="text-left p-2">Created At</th>
-                <th className="text-left p-2">Price Per Piece</th>
-                <th className="text-left p-2">Actions</th>
+                <th className="text-left p-2 bg-background text-gray-400">Quantity</th>
+                <th className="text-left p-2 bg-background text-gray-400">Created At</th>
+                <th className="text-left p-2 bg-background text-gray-400">Price Per Piece</th>
+                <th className="text-left p-2 bg-background text-gray-400">Actions</th>
               </tr>
             </thead>
             <tbody>
