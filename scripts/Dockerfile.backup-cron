@@ -1,13 +1,18 @@
 FROM node:18-slim
 
-# Install cron, mysql-client, and other dependencies
+# Install cron, mysql-client, tzdata, and other dependencies
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     default-mysql-client \
     curl \
     gnupg \
     cron \
+    tzdata \
     && rm -rf /var/lib/apt/lists/*
+
+# Set timezone (adjust to your timezone, e.g., Asia/Dhaka for Bangladesh)
+ENV TZ=Asia/Dhaka
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 WORKDIR /app
 
