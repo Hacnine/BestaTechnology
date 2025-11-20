@@ -185,8 +185,34 @@ UNLICENSED - Proprietary
 
 For support or questions, please contact the development team.
 
+## 🌐 VPS Deployment
+
+Deploy to your VPS server in just 5 minutes! See [QUICK_DEPLOY.md](./QUICK_DEPLOY.md) for the easiest deployment method.
+
+### Quick Deploy Command
+```bash
+bash <(curl -s https://raw.githubusercontent.com/Hacnine/BestaTechnology/main/deploy.sh)
+```
+
+### Deployment Options
+1. **[Quick Deploy](./QUICK_DEPLOY.md)** - 5-minute automated deployment (recommended)
+2. **[Full VPS Guide](./VPS_DEPLOYMENT_GUIDE.md)** - Comprehensive deployment documentation
+3. **Docker Compose Production** - Use `docker-compose.prod.yml` for manual deployment
+
+### Access Your Deployed App
+- Frontend: http://YOUR_SERVER_IP
+- Backend API: http://YOUR_SERVER_IP:3001
+
+For detailed instructions, see:
+- **Windows Users**: Run `quick-deploy.ps1` in PowerShell
+- **Linux/Mac Users**: Follow [VPS_DEPLOYMENT_GUIDE.md](./VPS_DEPLOYMENT_GUIDE.md)
+
 ## 🔄 Recent Updates
 
+- Added VPS deployment automation
+- Production-ready Docker configuration
+- Automated backup system
+- Enhanced security configurations
 - Migrated to monorepo structure
 - Enhanced CI/CD pipelines
 - Improved Docker configuration

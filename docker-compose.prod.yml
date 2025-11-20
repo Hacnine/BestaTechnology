@@ -1,0 +1,86 @@
+services:
+  mysql:
+    image: mysql:8
+    container_name: besta-mysql-prod
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "${MYSQL_USER}", "-p${MYSQL_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+    networks:
+      - besta-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: besta-backend-prod
+    restart: always
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@mysql:3306/${MYSQL_DATABASE}
+      JWT_SECRET: ${JWT_SECRET}
+      PORT: 3001
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - besta-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile-production
+    container_name: besta-frontend-prod
+    restart: always
+    ports:
+      - "80:80"
+    environment:
+      VITE_API_URL: http://${SERVER_IP}:3001
+    depends_on:
+      - backend
+    networks:
+      - besta-network
+
+  backup-scheduler:
+    build:
+      context: ./scripts
+      dockerfile: Dockerfile.backup-cron
+    container_name: besta-backup-scheduler-prod
+    restart: always
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: ${MYSQL_USER}
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+      DB_NAME: ${MYSQL_DATABASE}
+      DUMP_DIR: /app/backups
+      UPLOAD_TO_GCS: "false"
+      KEEP_LOCAL_BACKUP: "true"
+      LOCAL_RETENTION_DAYS: "7"
+    volumes:
+      - ./backups:/app/backups
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - besta-network
+
+volumes:
+  mysql_data:
+
+networks:
+  besta-network:
+    driver: bridge
