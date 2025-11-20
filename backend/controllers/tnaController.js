@@ -167,6 +167,8 @@ export const createTna = async (req, res) => {
       await tx.dHLTracking.create({
         data: {
           tna: { connect: { id: tna.id } },
+          date: new Date(sampleSendingDate),
+          trackingNumber: "",
         },
       })
 
