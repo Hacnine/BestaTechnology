@@ -264,6 +264,7 @@ model TrimsAndAccessories {
 // npx prisma generate
 // npx prisma db push
 // npx prisma migrate dev --name init
+// npx prisma migrate dev --name add_missing_columns
 // npx prisma studio
 // npx prisma migrate dev --name add_costsheet_fields
 // npx prisma db pull
