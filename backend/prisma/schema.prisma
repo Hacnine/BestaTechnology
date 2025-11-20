@@ -207,7 +207,7 @@ model SampleDevelopment {
 
 model DHLTracking {
   id             Int      @id @default(autoincrement())
-  date           DateTime
+  date           DateTime?
   tnaId                 Int?
   tna                   TNA?      @relation("DHLTrackingToTNA", fields: [tnaId], references: [id])
   trackingNumber String
