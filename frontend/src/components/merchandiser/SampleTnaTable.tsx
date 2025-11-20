@@ -100,6 +100,7 @@ const SampleTnaTable = ({ readOnlyModals = false }: SampleTnaTableProps) => {
     tnaId: number | null;
     style: string | null;
   }>({ open: false, tnaId: null, style: null });
+  const [finalFileReceivedDate, setFinalFileReceivedDate] = useState("");
   const [finalCompleteDate, setFinalCompleteDate] = useState("");
   const [actualBookingDate, setActualBookingDate] = useState("");
   const [actualReceiveDate, setActualReceiveDate] = useState("");
