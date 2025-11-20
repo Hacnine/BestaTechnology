@@ -8,7 +8,7 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { useGetTNASummaryQuery } from "@/redux/api/tnaApi";
+import { useDeleteTNAMutation, useGetTNASummaryQuery } from "@/redux/api/tnaApi";
 import { useUpdateCadDesignMutation } from "@/redux/api/cadApi";
 import { useUpdateFabricBookingMutation } from "@/redux/api/fabricBooking";
 import { useUpdateSampleDevelopmentMutation } from "@/redux/api/sampleDevelopementApi";
@@ -21,13 +21,14 @@ import {
   SampleModal,
 } from "./SampleTnaModals";
 import { useUpdateDHLTrackingMutation } from "@/redux/api/dHLTrackingApi";
+import { useUser } from "@/redux/slices/userSlice";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Download, Filter } from "lucide-react";
+import { Download, Filter, Trash } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -57,6 +58,11 @@ const SampleTnaTable = ({ readOnlyModals = false }: SampleTnaTableProps) => {
     useUpdateSampleDevelopmentMutation();
   const [updateDHLTracking, { isLoading: isCreatingDHL }] =
     useUpdateDHLTrackingMutation();
+
+  const [deleteTNA, { isLoading: isDeleting }] = useDeleteTNAMutation();
+
+  const { user } = useUser();
+  const isAdmin = user?.role === "ADMIN";
 
   const [leadTimeModal, setLeadTimeModal] = useState<{
     open: boolean;
@@ -89,7 +95,11 @@ const SampleTnaTable = ({ readOnlyModals = false }: SampleTnaTableProps) => {
     tnaId: number | null;
   }>({ open: false, style: null, tnaId: null });
 
-  const [finalFileReceivedDate, setFinalFileReceivedDate] = useState("");
+  const [deleteModal, setDeleteModal] = useState<{
+    open: boolean;
+    tnaId: number | null;
+    style: string | null;
+  }>({ open: false, tnaId: null, style: null });
   const [finalCompleteDate, setFinalCompleteDate] = useState("");
   const [actualBookingDate, setActualBookingDate] = useState("");
   const [actualReceiveDate, setActualReceiveDate] = useState("");
@@ -277,6 +287,17 @@ const SampleTnaTable = ({ readOnlyModals = false }: SampleTnaTableProps) => {
     }
   };
 
+  // Handler for TNA deletion
+  const handleDeleteTNA = async () => {
+    if (!deleteModal.tnaId) return;
+    try {
+      await deleteTNA(deleteModal.tnaId).unwrap();
+      setDeleteModal({ open: false, tnaId: null, style: null });
+    } catch (err) {
+      // handle error (toast, etc.)
+    }
+  };
+
   return (
     <div className="w-full overflow-x-hidden">
       <div className="overflow-x-auto w-full">
@@ -384,12 +405,15 @@ const SampleTnaTable = ({ readOnlyModals = false }: SampleTnaTableProps) => {
               <TableHead className="sticky top-0 bg-background z-20">
                 DHL Tracking
               </TableHead>
+              <TableHead className="sticky top-0 bg-background z-20">
+                Actions
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {queryLoading ? (
               <TableRow>
-                <TableCell colSpan={12} className="text-center py-8">
+                <TableCell colSpan={13} className="text-center py-8">
                   <div className="flex flex-col items-center justify-center gap-2">
                     <span className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-400 mb-2"></span>
                     <span className="text-muted-foreground">Loading...</span>
@@ -576,6 +600,24 @@ const SampleTnaTable = ({ readOnlyModals = false }: SampleTnaTableProps) => {
                         )
                       )}
                     </TableCell>
+                    <TableCell>
+                      {isAdmin && (
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() =>
+                            setDeleteModal({
+                              open: true,
+                              tnaId: row.id,
+                              style: row.style,
+                            })
+                          }
+                          disabled={isDeleting}
+                        >
+                          <Trash className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </TableCell>
                   </TableRow>
                 );
               })
@@ -703,6 +745,44 @@ const SampleTnaTable = ({ readOnlyModals = false }: SampleTnaTableProps) => {
               >
                 {isCreatingDHL ? "Saving..." : "Complete"}
               </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+        {/* Delete Confirmation Modal */}
+        <Dialog
+          open={deleteModal.open}
+          onOpenChange={(open) =>
+            setDeleteModal(
+              open ? deleteModal : { open: false, tnaId: null, style: null }
+            )
+          }
+        >
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Confirm Deletion</DialogTitle>
+            </DialogHeader>
+            <div className="flex flex-col gap-4">
+              <p>
+                Are you sure you want to delete the TNA record for style{" "}
+                <strong>{deleteModal.style}</strong>? This action cannot be undone.
+              </p>
+              <div className="flex justify-end gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() =>
+                    setDeleteModal({ open: false, tnaId: null, style: null })
+                  }
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="destructive"
+                  onClick={handleDeleteTNA}
+                  disabled={isDeleting}
+                >
+                  {isDeleting ? "Deleting..." : "Delete"}
+                </Button>
+              </div>
             </div>
           </DialogContent>
         </Dialog>
