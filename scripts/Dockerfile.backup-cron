@@ -26,10 +26,20 @@ COPY dump-db.js ./
 # Create backup directory
 RUN mkdir -p /app/backups
 
+# Create a shell script wrapper for the backup
+RUN echo '#!/bin/bash' > /app/backup-wrapper.sh && \
+    echo 'export DB_HOST=mysql' >> /app/backup-wrapper.sh && \
+    echo 'export DB_PORT=3306' >> /app/backup-wrapper.sh && \
+    echo 'export DB_USER=bestauser' >> /app/backup-wrapper.sh && \
+    echo 'export DB_PASSWORD=bestapass' >> /app/backup-wrapper.sh && \
+    echo 'export DB_NAME=besta' >> /app/backup-wrapper.sh && \
+    echo 'export DUMP_DIR=/app/backups' >> /app/backup-wrapper.sh && \
+    echo 'cd /app && /usr/local/bin/node dump-db.js' >> /app/backup-wrapper.sh && \
+    chmod +x /app/backup-wrapper.sh
+
 # Create cron job file - runs twice daily at 11 AM and 5 PM
-# Use full path to node executable for cron compatibility
-RUN echo "0 11 * * * root cd /app && /usr/local/bin/node dump-db.js >> /app/backups/backup.log 2>&1" > /etc/cron.d/backup-cron && \
-    echo "0 17 * * * root cd /app && /usr/local/bin/node dump-db.js >> /app/backups/backup.log 2>&1" >> /etc/cron.d/backup-cron && \
+RUN echo "0 11 * * * root /app/backup-wrapper.sh >> /app/backups/backup.log 2>&1" > /etc/cron.d/backup-cron && \
+    echo "0 17 * * * root /app/backup-wrapper.sh >> /app/backups/backup.log 2>&1" >> /etc/cron.d/backup-cron && \
     echo "" >> /etc/cron.d/backup-cron && \
     chmod 0644 /etc/cron.d/backup-cron && \
     crontab /etc/cron.d/backup-cron
