@@ -15,6 +15,7 @@ backend/build/
 .env.*.local
 frontend/.env
 backend/.env
+.env.production
 
 # Logs
 logs/
