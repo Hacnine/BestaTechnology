@@ -36,12 +36,15 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+        working-directory: backend
 
       - name: Prisma validate
         run: pnpm run prisma:validate
+        working-directory: backend
 
       - name: Prisma generate
         run: pnpm run prisma:generate
+        working-directory: backend
 
       - name: Upload prisma folder
         uses: actions/upload-artifact@v4
