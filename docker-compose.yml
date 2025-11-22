@@ -21,7 +21,7 @@ services:
 
   mysql:
     image: mysql:8
-    container_name: besta-mysql2
+    container_name: besta-mysql
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
