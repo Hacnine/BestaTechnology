@@ -112,6 +112,7 @@ services:
     container_name: besta-backup-scheduler
     restart: always  # Always running to schedule backups
     environment:
+      TZ: Asia/Dhaka  # Bangladesh timezone (GMT+6)
       DB_HOST: mysql
       DB_PORT: 3306
       DB_USER: bestauser

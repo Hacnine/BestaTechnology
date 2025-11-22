@@ -27,8 +27,9 @@ COPY dump-db.js ./
 RUN mkdir -p /app/backups
 
 # Create cron job file - runs twice daily at 11 AM and 5 PM
-RUN echo "0 11 * * * cd /app && node dump-db.js >> /app/backups/backup.log 2>&1" > /etc/cron.d/backup-cron && \
-    echo "0 17 * * * cd /app && node dump-db.js >> /app/backups/backup.log 2>&1" >> /etc/cron.d/backup-cron && \
+# Use full path to node executable for cron compatibility
+RUN echo "0 11 * * * root cd /app && /usr/local/bin/node dump-db.js >> /app/backups/backup.log 2>&1" > /etc/cron.d/backup-cron && \
+    echo "0 17 * * * root cd /app && /usr/local/bin/node dump-db.js >> /app/backups/backup.log 2>&1" >> /etc/cron.d/backup-cron && \
     echo "" >> /etc/cron.d/backup-cron && \
     chmod 0644 /etc/cron.d/backup-cron && \
     crontab /etc/cron.d/backup-cron
