@@ -10,9 +10,6 @@ jobs:
   test:
     name: Install & Prisma checks (Backend)
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: backend
 
     steps:
       - name: Checkout code
@@ -35,6 +32,9 @@ jobs:
           cache-dependency-path: 'pnpm-lock.yaml'
 
       - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install backend dependencies
         run: pnpm install --frozen-lockfile
         working-directory: backend
 

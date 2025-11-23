@@ -44,3 +44,7 @@ backend/uploads/
 
 # Generated
 backend/generated/
+
+# SSH Keys
+github_actions_key
+github_actions_key.pub

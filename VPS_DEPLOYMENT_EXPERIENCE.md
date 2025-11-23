@@ -442,6 +442,7 @@ sudo -i
 cd /opt
 git clone https://github.com/Hacnine/BestaTechnology.git
 cd BestaTechnology
+or git pull origin main
 ```
 
 ### Step 3: Setup Environment

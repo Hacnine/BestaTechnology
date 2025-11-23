@@ -18,7 +18,7 @@ Open your terminal and connect via SSH:
 ssh administrator@108.181.187.124
 ```
 
-Enter password: `Eco******121`
+Enter password: `Eco***/***121`
 
 #### Step 2: Switch to Root User
 ```bash
@@ -389,3 +389,78 @@ If you encounter issues:
 ---
 
 **Congratulations! Your Besta Apparels application is now live!** 🚀
+
+
+Step 1: Check Existing Database on VPS
+Run these commands on your VPS to see what's currently in the database:
+
+cd /opt/BestaTechnology
+
+# 1. Check MySQL container is healthy
+`sudo docker ps --filter "name=besta-mysql-prod" --format "table {{.Names}}\t{{.Status}}"`
+
+# 2. Connect to MySQL and list databases
+`sudo docker exec -it besta-mysql-prod mysql -ubestauser -pbestapass -e "SHOW DATABASES;"`
+
+# 3. Check tables in the besta database
+`sudo docker exec -it besta-mysql-prod mysql -ubestauser -pbestapass -e "USE besta; SHOW TABLES;"`
+
+# 4. Count records in key tables
+` sudo docker exec -it besta-mysql-prod mysql -ubestauser -pbestapass besta -e "
+SELECT 'users' as table_name, COUNT(*) as count FROM users
+UNION ALL SELECT 'employees', COUNT(*) FROM employees
+UNION ALL SELECT 'tnas', COUNT(*) FROM tnas
+UNION ALL SELECT 'buyers', COUNT(*) FROM buyers
+UNION ALL SELECT 'styles', COUNT(*) FROM styles;" `
+
+# 5. Check if you have important data to backup first
+`sudo docker exec -it besta-mysql-prod mysql -ubestauser -pbestapass besta -e "SELECT id, userName, role FROM users LIMIT 10;"`
+
+Step 2: Backup Current VPS Database (Safety First!)
+Before importing, create a backup of what's currently on the VPS:
+
+cd /opt/BestaTechnology
+
+# Create current backup with timestamp
+sudo docker exec -i besta-mysql-prod mysqldump -ubestauser -pbestapass besta | gzip > ./backups/vps_backup_before_import_$(date +%F_%H%M%S).sql.gz
+
+# Verify backup was created
+ls -lh ./backups/vps_backup_before_import_*.sql.gz
+
+Step 3: Copy SQL Dump to VPS
+From your Windows machine (PowerShell):
+# Option A: Use SCP to copy the SQL file
+scp D:\BestaApparels\backups\besta_backup_20251119.sql administrator@108.181.187.124:/opt/BestaTechnology/backups/
+
+# Option B: If the file is already in your Git repo, just pull it
+# (SSH into VPS first)
+Step 4: Import SQL Dump into VPS MySQL
+On your VPS, run these commands:
+
+cd /opt/BestaTechnology
+
+# 1. Verify the SQL file is present
+ls -lh ./backups/besta_backup_20251119.sql
+
+# 2. Check MySQL container is running
+sudo docker ps --filter "name=besta-mysql-prod"
+
+# 3. Import the SQL dump
+sudo docker exec -i besta-mysql-prod mysql -ubestauser -pbestapass besta < ./backups/besta_backup_20251119.sql
+
+# 4. Verify import succeeded - check record counts
+sudo docker exec -it besta-mysql-prod mysql -ubestauser -pbestapass besta -e "
+SELECT 'users' as table_name, COUNT(*) as count FROM users
+UNION ALL SELECT 'employees', COUNT(*) FROM employees
+UNION ALL SELECT 'tnas', COUNT(*) FROM tnas
+UNION ALL SELECT 'buyers', COUNT(*) FROM buyers
+UNION ALL SELECT 'styles', COUNT(*) FROM styles;"
+
+# 5. Check specific data from the dump (e.g., user "Mithu")
+sudo docker exec -it besta-mysql-prod mysql -ubestauser -pbestapass besta -e "SELECT id, userName, role FROM users WHERE userName='Mithu';"
+
+# 6. Restart backend to reconnect with fresh data
+sudo docker restart besta-backend-prod
+
+# 7. Check backend logs
+sudo docker logs --tail 50 besta-backend-prod
